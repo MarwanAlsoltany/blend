@@ -22,8 +22,10 @@ A versatile and lightweight PHP task runner, designed with simplicity in mind.
 <summary>Table of Contents</summary>
 <p>
 
-[Installation](#installation)<br/>
 [About Blend](#about-blend)<br/>
+[Installation](#installation)<br/>
+[Config](#config)<br/>
+[Examples](#examples)<br/>
 [Changelog](./CHANGELOG.md)
 
 </p>
