@@ -19,14 +19,14 @@ namespace MAKS\Blend;
  *
  * @method void handleException(\Throwable $exception) Exception handler function.
  * @method void handleError(int $code, string $message, string $file, int $line) Error handler function.
- * @method mixed shutdown() Shutdown function. This method is abstract, implement using `self::extend()`.
+ * @method mixed shutdown() Shutdown function. This method is abstract, implement it using `self::extend()`.
  */
 class TaskRunner
 {
     /**
      * @var string Package version.
      */
-    public const VERSION = 'v1.0.1';
+    public const VERSION = 'v1.0.2';
 
     /**
      * @var array Default executables.
@@ -61,6 +61,16 @@ class TaskRunner
         'quiet'        => null, // (bool|null)
         'tasks'        => null, // (array[]|null)
     ];
+
+    /**
+     * @var int Task success code.
+     */
+    public const SUCCESS = 0;
+
+    /**
+     * @var int Task failure code.
+     */
+    public const FAILURE = 1;
 
     /**
      * @var string Task type callback.
@@ -158,7 +168,7 @@ class TaskRunner
 
 
     /**
-     * Extends the class with a magic using the passed callback.
+     * Extends the class with a magic method using the passed callback.
      * The passed function will get converted to a closure and bound to the
      * object with `object` visibility (can access private and protected members).
      *
@@ -192,7 +202,7 @@ class TaskRunner
                 [$exception->getMessage(), (new \ReflectionClass($exception))->getShortName()]
             );
 
-            $this->terminate(1);
+            $this->terminate(static::FAILURE);
         });
 
         set_time_limit(0);
@@ -561,7 +571,7 @@ class TaskRunner
             ]
         );
 
-        $this->terminate(0);
+        $this->terminate(static::SUCCESS);
     }
 
     /**
@@ -589,7 +599,7 @@ class TaskRunner
         if (!count($matchedTasks)) {
             $this->write(['']);
 
-            $this->terminate(1);
+            $this->terminate(static::FAILURE);
 
             return;
         }
@@ -622,7 +632,7 @@ class TaskRunner
 
         $this->write(['']);
 
-        $this->terminate(1);
+        $this->terminate(static::FAILURE);
     }
 
     /**
@@ -638,7 +648,7 @@ class TaskRunner
 
         $this->write(['']);
 
-        $this->terminate(0);
+        $this->terminate(static::SUCCESS);
     }
 
     /**
@@ -661,7 +671,7 @@ class TaskRunner
 
         $this->write(
             ['[@(c)[{%s}]] @(b,%s)[{ %s }] @(m)[{%.2fms}]', ''],
-            [date('H:i:s'), $code > 0 ? 'r' : 'g', 'DONE', $time]
+            [date('H:i:s'), $code > static::SUCCESS ? 'r' : 'g', 'DONE', $time]
         );
 
         $this->terminate($code);
@@ -1000,9 +1010,9 @@ class TaskRunner
         if ($executor === static::CALLBACK_TASK) {
             $executor = '';
             try {
-                $result = $executable->bindTo($this)(...(array)$arguments) ?? 0;
+                $result = $executable->bindTo($this)(...(array)$arguments) ?? static::SUCCESS;
             } catch (\Exception $e) {
-                $result = $executable($this, ...(array)$arguments) ?? 0;
+                $result = $executable($this, ...(array)$arguments) ?? static::SUCCESS;
             }
         }
 
@@ -1034,7 +1044,7 @@ class TaskRunner
         $chainable = $task !== null;
         $task      = $this->task = (string)($task ?? $this->task);
         $available = $this->getTask($task);
-        $code      = 0;
+        $code      = static::SUCCESS;
 
         switch (true) {
             case ($task === 'help' || $task === ''):
