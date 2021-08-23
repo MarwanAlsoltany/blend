@@ -7,6 +7,10 @@
  * the LICENSE file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
+namespace MAKS\Blend;
+
 require __DIR__ . '/TaskRunner.php';
 
 use MAKS\Blend\TaskRunner as Blend;
@@ -65,5 +69,43 @@ $blend->addCallbackTask(
         $this->say("Generated '@(y)[{{$filename}}]' in '@(y)[{{$directory}}]'");
     }
 );
+
+if (strlen($phar = \Phar::running(false))) {
+    $blend->addCallbackTask(
+        'phar:update',
+        'Updates Blend PHAR to the latest version from remote.',
+        function () use ($phar) {
+            $repo = 'https://github.com/MarwanAlsoltany/blend/releases/latest/download/blend.phar';
+            $temp = tempnam(sys_get_temp_dir(), 'BUF');
+            $code = Blend::SUCCESS;
+
+            if (copy($repo, $temp)) {
+                $this->say('Checking if an update is available.');
+
+                if (sha1_file($temp) === sha1_file($phar)) {
+                    $this->say('@(y)[{You are already running the latest version of Blend.}]');
+                } else {
+                    $this->say('@(y)[{A new Blend version has been found!}]');
+
+                    if (copy($temp, $phar)) {
+                        $this->say('@(g)[{Updated Blend PHAR to the latest version!}]');
+                    } else {
+                        $this->say('@(r)[{Failed to update Blend. Could not replace old source!}]');
+                        $code = Blend::FAILURE;
+                    }
+                }
+
+                $this->say('Cleaning up temporary files.');
+            } else {
+                $this->say('@(r)[{Failed to update Blend. Could not fetch data from remote!}]');
+                $code = Blend::FAILURE;
+            }
+
+            unlink($temp);
+
+            return $code;
+        }
+    );
+}
 
 $blend->start();
