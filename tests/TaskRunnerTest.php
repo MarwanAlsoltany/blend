@@ -415,6 +415,15 @@ class TaskRunnerTest extends TestCase
 
     public function testStartMethodWithEnvironmentVariable()
     {
+        global $argv;
+
+        for ($i = 1; $i < count($argv); $i++) {
+            // remove PHPUnit options/arguments that get interpreted as tasks.
+            if (isset($argv[$i])) {
+                unset($argv[$i]);
+            }
+        }
+
         putenv('TR_PHPUNIT=php:./bin/php');
 
         $this->expectOutputRegex('~(' . preg_quote('./bin/php') . ')~');
