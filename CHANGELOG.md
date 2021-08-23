@@ -4,8 +4,10 @@ All notable changes to **Blend** will be documented in this file.
 
 
 ## [[1.0.1] - 2021-08-23](https://github.com/MarwanAlsoltany/velox/compare/v1.0.0...v1.0.1)
-- Update `composer.json`
+- Update `composer.json`:
     - Change package type form `project` to `library`.
+- Update `TaskRunner` class:
+    - Bump package version.
 
 <br />
 
