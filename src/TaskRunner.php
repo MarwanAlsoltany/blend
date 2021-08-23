@@ -331,7 +331,7 @@ class TaskRunner
                 ->setDisabled($task['disabled'] ?? false);
         }
 
-        $tasks = $this->load($this->executables, $this->translations) ?? [];
+        $tasks = $this->load($this->executables) ?? [];
 
         foreach ($tasks as $task) {
             $this->addTask(
@@ -348,13 +348,12 @@ class TaskRunner
      * Loads tasks from the specified executables array and applies translations to them.
      *
      * @param array[] $executables An array where the key is the executer program and the value is an array of glob patterns.
-     * @param string[] $translations An array where the key should be replaced by the value in command name.
      *
      * @return array|null
      *
      * @throws \Exception If an executables directory is a file.
      */
-    protected function load(array $executables, array $translations): ?array
+    protected function load(array $executables): ?array
     {
         $tasks = null;
 
