@@ -1,0 +1,33 @@
+dist: xenial
+
+os:
+    - linux
+
+language: php
+
+php:
+    - 7.4
+    - 8.0
+
+env:
+    global:
+        - ECHO_MESSAGE="Blend Test Suite"
+        - COMPOSER_FLAGS="--prefer-stable --prefer-dist"
+        - XDEBUG_MODE="coverage"
+
+cache:
+    directories:
+        - $HOME/.composer/cache
+        - $HOME/.local
+
+before_script:
+    - echo $ECHO_MESSAGE
+    - composer self-update
+    - composer update $COMPOSER_FLAGS
+
+script:
+    - ls -l # for debugging
+    - vendor/bin/phpunit --coverage-clover=coverage.clover
+
+after_script:
+    - echo "$ECHO_MESSAGE Finished Successfly"
