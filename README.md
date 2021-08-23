@@ -42,7 +42,7 @@ A versatile and lightweight PHP task runner, designed with simplicity in mind.
 
 <div align="center">
 
-<img src="./blend-demo.gif" width="850" height="716" />
+<img src="./blend-demo.gif" width="850" />
 
 </div>
 
