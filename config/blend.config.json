@@ -1,0 +1,25 @@
+{
+    "autoload": null,
+    "merge": true,
+    "executables": {
+        "php": [
+            "./bin/*"
+        ]
+    },
+    "translations": {
+        "abc": "xyz"
+    },
+    "ansi": true,
+    "quiet": false,
+    "tasks": {
+        "some:task": {
+            "name": "some:task",
+            "description": "Some task",
+            "executor": "shell",
+            "executable": "ls",
+            "arguments": "-lash",
+            "hidden": false,
+            "disabled": false
+        }
+    }
+}
