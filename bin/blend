@@ -1,0 +1,15 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * @author Marwan Al-Soltany <MarwanAlsoltany@gmail.com>
+ * @copyright Marwan Al-Soltany 2021
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
+
+define('BLEND_ROOT', dirname(__DIR__));
+
+
+require BLEND_ROOT . '/src/blend.php';
