@@ -1,0 +1,178 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * @author Marwan Al-Soltany <MarwanAlsoltany@gmail.com>
+ * @copyright Marwan Al-Soltany 2021
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
+
+define('BLEND_REPO', 'https://raw.githubusercontent.com/MarwanAlsoltany/blend/master');
+define('BLEND_SETUP', BLEND_REPO . '/bin/setup');
+define('BLEND_SOURCE', BLEND_REPO . '/src/TaskRunner.php');
+
+
+$setupFile = BLEND_SETUP;
+$srcDir    = sprintf('%s/.blend', __DIR__);
+$srcFile   = sprintf('%s/%s', $srcDir, basename(BLEND_SOURCE));
+$exeFile   = sprintf('%s/blend', __DIR__);
+$libFile   = BLEND_SOURCE;
+
+
+$content = <<<PHP
+#!/usr/bin/env php
+<?php
+
+/**
+ * To uninstall Blend, delete the file "{$exeFile}" (this file)
+ * and the source directory "{$srcDir}".
+ */
+
+require '{$srcFile}';
+
+use MAKS\Blend\TaskRunner as Blend;
+
+
+\$blend = new Blend([
+    'php' => [
+        './bin/*',
+    ],
+]);
+
+\$blend->setName('Blend');
+\$blend->setVersion('v0.0.0');
+
+// these tasks are only for demonstration purposes
+// you can freely delete/edit them to your needs
+
+\$blend->addShellTask('ls', 'Lists the content of a directory.', 'ls', '-lash');
+
+\$blend->addCallbackTask('whoami', null, function () {
+    /** @var Blend \$this */
+    \$this->say('@task');
+});
+\$blend->disableTask('whoami');
+
+\$blend->addCallbackTask('blend:setup:remove', 'Removes Blend setup file if it exists.', function () {
+    /** @var Blend \$this */
+    \$setupFile = '{$setupFile}';
+    \$setupFile = __DIR__ . '/' . basename(\$setupFile);
+    file_exists(\$setupFile) && unlink(\$setupFile);
+    \$this->say('Blend setup has been removed.');
+});
+\$blend->hideTask('blend:setup:remove');
+
+\$blend->addCallbackTask('blend:install', 'Installs Blend.', function () {
+    /** @var Blend \$this */
+    \$setupFile = '{$setupFile}';
+    \$this->exec("php -r \\"copy('{\$setupFile}', 'setup');\\"");
+    \$this->exec('php setup');
+    \$this->run('blend:setup:remove');
+    \$this->say('Blend has been installed.');
+});
+
+\$blend->addCallbackTask('blend:uninstall', 'Uninstalls Blend.', function () {
+    /** @var Blend \$this */
+    \$srcFile = '{$srcFile}';
+    unlink(\$srcFile);
+    unlink(dirname(\$srcFile) . '/.gitignore');
+    rmdir(dirname(\$srcFile));
+    unlink(__FILE__);
+    \$this->run('blend:setup:remove');
+    \$this->say('Blend has been uninstalled.');
+});
+
+\$blend->addCallbackTask('blend:update', 'Updates Blend.', function () {
+    /** @var Blend \$this */
+    \$srcFile = '{$srcFile}';
+    unlink(\$srcFile);
+    \$this->run('blend:install');
+    \$this->say('Blend has been updated.');
+});
+
+// \$blend->sort();
+\$blend->start();
+PHP;
+
+
+write('');
+write('Blend Task Runner Installer', 'C', 3);
+
+write("Setting up Blend installation directory '{$srcDir}' ...", 'Y');
+
+if (!is_dir($srcDir) && !mkdir($srcDir, 0744, true)) {
+    write("\tCould not create the directory '{$srcDir}'!", 'R', 2);
+    exit(1);
+}
+
+if (!file_exists($srcDir . '/.gitignore')) {
+    file_put_contents($srcDir . '/.gitignore', '*' . PHP_EOL);
+}
+
+write("\tDone!", 'G', 2);
+
+
+write("Fetching Blend source from '{$libFile}' and installing it ...", 'Y');
+
+if (!is_file($srcFile) && !copy(BLEND_SOURCE, $srcFile)) {
+    write("\tCould note create the file '{$srcFile}'!", 'R', 2);
+    exit(1);
+}
+
+write("\tDone!", 'G', 2);
+
+
+write('Creating Blend executable ...', 'Y');
+
+if (!file_exists($exeFile)) {
+    file_put_contents($exeFile, $content);
+}
+
+write("\tDone!", 'G', 2);
+
+
+write([
+    "",
+    "You may now delete the setup file\e[0m\e[36m {$setupFile}\e[0m",
+    "",
+    "Run: [php\e[31m blend\e[0m\e[32m help\e[0m] to get started.",
+    "",
+    "Check out the\e[31m blend\e[0m executable to get an idea of how blend works.",
+    "",
+    "",
+    "",
+]);
+
+write('Blend has been installed successfully!', 'G', 2);
+
+
+
+function write($text, ?string $style = null, int $newLine = 1) {
+    $ansi = [
+        'R' => "\e[31m%s\e[0m\n",
+        'G' => "\e[32m%s\e[0m\n",
+        'Y' => "\e[33m%s\e[0m\n",
+        'B' => "\e[34m%s\e[0m\n",
+        'M' => "\e[35m%s\e[0m\n",
+        'C' => "\e[36m%s\e[0m\n",
+        'W' => "\e[37m%s\e[0m\n",
+    ];
+
+    $format = "%s\n";
+
+    $style = strtoupper($style);
+
+    if (isset($ansi[$style])) {
+        $format = $ansi[$style];
+    }
+
+    if ($newLine > 1) {
+        $format .= str_repeat("\n", $newLine - 1);
+    }
+
+    foreach ((array)$text as $line) {
+        printf($format, $line);
+    }
+}
