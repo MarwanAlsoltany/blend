@@ -89,23 +89,23 @@ This is the recommended way to install Blend. With this installation method, Ble
 
 #### Using PHAR:
 
-Download Blend PHAR file form the [releases](https://github.com/MarwanAlsoltany/blend/releases) page or using the command down below (do not forget to adjust the version segment):
+Download Blend PHAR archive form the [releases](https://github.com/MarwanAlsoltany/blend/releases) page or using the command down below (do not forget to adjust the version segment):
 
 ```sh
 php -r "copy('https://github.com/MarwanAlsoltany/blend/releases/download/vX.X.X/blend.phar', 'blend');"
 ```
 
-With this installation method, you will get Blend as a portable PHAR file, you can place it anywhere you want or even include it in your `PATH` for easy access. With this installation method, you have to supply a config file in order to configure/customize Blend. This installation method exists for portability and where Blend is not bound to a specific project.
+With this installation method, you will get Blend as a portable PHAR file, you can place it anywhere you want or even include it in your `PATH` for easy access. With this installation method, you have to supply a config file in order to configure/customize Blend. This installation method exists for portability where Blend is not bound to a specific project and a config file is sufficient.
 
 #### Using Installer:
 
-Download Blend Setup directly from the repository, or using the command down below:
+Download Blend Setup directly from the [repository](./bin/setup), or using the command down below:
 
 ```sh
 php -r "copy('https://raw.githubusercontent.com/MarwanAlsoltany/blend/master/bin/setup', 'setup');" && php setup
 ```
 
-Using this method, the Blend executable and source will be installed in the current working directory (to take advantage of IDEs Intellisense). With this installation method, you can configure Blend programmatically using the `blend` executable file or by supplying a config file in the current working directory. This installation method exists merely for legacy projects, where Composer is not an option.
+Using this method, the Blend executable and source will be installed in the current working directory (to take advantage of IDEs Intellisense when configuring Blend programmatically). With this installation method, you can configure Blend programmatically using the `blend` executable file or by supplying a config file in the current working directory. This installation method exists merely for legacy projects, where Composer is not an option and programmable config is required.
 
 
 ---
@@ -113,68 +113,37 @@ Using this method, the Blend executable and source will be installed in the curr
 
 ## Config
 
-Blend can be configured using either of the two available configuration formats:
+Blend can be configured using either of the two available config formats:
 
 #### PHP Config `blend.config.php`
 
 ```php
 <?php return [
+    // Refer to config/blend.config.php to learn more about the expected data types
 
-    // (string|null) The autoload file to use (useful when using PHP Callables as tasks executables).
     'autoload' => null,
-
-    // (bool|null) Whether or not to merge the supplied executables/translations with the default ones.
     'merge' => true,
-
-    // (array[]|null) The executables to load.
     'executables' => [
         'php' => [
             './bin/*',
         ],
     ],
-
-    // (string[]|null) The translations to apply.
     'translations' => [
         'abc' => 'xyz',
     ],
-
-    // (bool|null) Whether or not to turn on ANSI colors for the output.
     'ansi' => true,
-
-    // (bool|null) Whether or not to turn on the output.
     'quiet' => false,
-
-    // (array[]|null) The tasks to add.
     'tasks' => [
-
-        // (array|null) Task definition (key = Task fallback name, value = Task parameters).
         'some:task' => [
-
-            // (string|null) If not specified, the key of the containing array will be used instead.
             'name' => 'some:task',
-
-            // (string|null) If not specified a fallback will be used instead.
             'description' => 'Some task',
-
-            // (string) Valid values are 'shell', 'callback', or any available program (PHP for example).
             'executor' => 'shell',
-
-            // (string|callable) Depending on the executor, either a string containing command name or a path to a file, or a valid php callable.
             'executable' => 'ls',
-
-            // (string|array|null) Depending on the executor, either a string containing command options/arguments, or an array of arguments to pass to the callback.
             'arguments' => '-lash',
-
-            // (bool|null) Whether or not to hide the task from being listed.
             'hidden' => false,
-
-            // (bool|null) Whether or not to prevent the task from being ran.
             'disabled' => false,
-
         ],
-
     ],
-
 ];
 ```
 
@@ -182,7 +151,7 @@ Blend can be configured using either of the two available configuration formats:
 
 ```jsonc
 {
-    // Check out the PHP config example for data types
+    // Refer to config/blend.config.php to learn more about the expected data types
 
     "autoload": null,
     "merge": true,
@@ -212,7 +181,7 @@ Blend can be configured using either of the two available configuration formats:
 
 #### How Does Config Loading Work?
 
-Blend will try to load the config from the current working directory, if nothing is to be found, it will go one level upwards and look in the parent directory and so on until it reaches the root directory. If it does not find anything there either, Blend will start without config.
+Blend will try to load the config from the current working directory, if nothing is to be found there, it will go one level upwards and look in the parent directory and so on until it reaches the root directory. If it does not find anything there either, Blend will start without config.
 
 ![#1e90ff](https://via.placeholder.com/11/1e90ff/000000?text=+) **Fact:** *Although JSON config format is recommended, PHP config has precedence. This means, if the two config formats are to be found in the same working, the PHP config will get loaded instead of the JSON one. This is merely because the PHP config can be executed and is, therefore, more powerful.*
 
@@ -258,52 +227,65 @@ $blend->setVersion('vX.X.X');
 
 // these tasks are for demonstration purposes only
 
-$blend->addShellTask('ls', 'Lists content of the current directory or the passed one.', 'ls', '-lash');
+$blend->addShellTask('ls', 'Lists content of the CWD or the passed one.', 'ls', '-lash');
 
 $blend->addCallbackTask('whoami', null, function () {
     /** @var Blend $this */
-    $this->say('@task'); // using the @task placeholder
+    $this->say('@task'); // using the @task placeholder to get a string representation of the task class
 });
-$blend->disableTask('whoami');
+$blend->disableTask('whoami'); // preventing the task from being ran
+$blend->hideTask('whoami'); // preventing the task from being listed
 
 $blend->addCallbackTask('server:start', 'Starts a PHP Development Server in CWD', function () {
     /** @var Blend $this */
-    if (file_exists(getcwd() . '/.pid.server')) {
+    $cwd = getcwd();
+
+    if (file_exists("{$cwd}/.pid.server")) {
         $this->say('An already started PHP Development Server has been found.');
 
-        return 1;
+        return Blend::FAILURE;
     }
 
-    $pid = $this->exec('php -S localhost:8000 -t ' . getcwd(), true);
-    $this->say('Started a PHP Development Server in the background with PID: ' . $pid);
+    $pid = $this->exec("php -S localhost:8000 -t {$cwd}", true); // passing true runs the command asynchronously
+    $this->say("Started a PHP Development Server in the background with PID: [{$pid}]");
 
-    file_put_contents(getcwd() . '/.pid.server', $pid);
+    file_put_contents("{$cwd}/.pid.server", $pid);
 
-    return 0;
+    return Blend::SUCCESS;
 });
 
 $blend->addCallbackTask('server:stop', 'Stops a started PHP Development Server in CWD', function () {
     /** @var Blend $this */
-    if (!file_exists(getcwd() . '/.pid.server')) {
+    $cwd = getcwd();
+
+    if (!file_exists("{$cwd}/.pid.server")) {
         $this->say('No started PHP Development Server has been found.');
 
-        return 1;
+        return Blend::FAILURE;
     }
 
-    $pid = trim(file_get_contents(getcwd() . '/.pid.server'));
+    $pid = trim(file_get_contents("{$cwd}/.pid.server"));
 
-    $this->exec((PHP_OS === 'WINNT' ? 'tskill ' : 'kill -15 ') . $pid);
-    $this->say('Stopped PHP Development Server with PID: ' . $pid);
+    $this->exec(PHP_OS === 'WINNT' ? "tskill {$pid}" : "kill -15 {$pid}");
+    $this->say("Stopped PHP Development Server with PID: [{$pid}]");
 
-    unlink(getcwd() . '/.pid.server');
+    unlink("{$cwd}/.pid.server");
+
+    return Blend::SUCCESS;
 });
 
 $blend->addCallbackTask('server:restart', 'Restarts the started PHP Development Server in CWD', function () {
     /** @var Blend $this */
+    $this->say('Restarting the PHP Development Server');
+
     $this
-        ->run('server:stop') // use the runTask() method instead to get the return value of the called task
+        ->setQuiet(true) // disable output temporarily
+        ->run('server:stop')
         ->run('server:start')
-        ->say('Restarted PHP Development Server');
+        ->setQuiet(false); // enable output again
+
+    // use the runTask() method instead to get the return value of the called task
+    // return $this->runTask('server:stop') & $this->runTask('server:start');
 });
 
 $blend->sort();
