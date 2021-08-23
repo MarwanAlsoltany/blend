@@ -26,7 +26,7 @@ class TaskRunner
     /**
      * @var string Package version.
      */
-    public const VERSION = 'v1.0.2';
+    public const VERSION = 'v1.0.3';
 
     /**
      * @var array Default executables.
@@ -41,12 +41,13 @@ class TaskRunner
      * @var array Default task name translations.
      */
     public const TRANSLATIONS = [
+        // file extensions with dots, come first to minimize unexpected name translations
+        '.php' => '', '.phar' => '', '.sh' => '',
         ' ' => ':', '-' => ':', '_' => ':',
         '~' => '', '!' => '', '@' => '', '#' => '', '$' => '', '&' => '', '%' => '',
         '(' => '', ')' => '', '{' => '', '}' => '', '[' => '', ']' => '',
         '+' => '', '=' => '', '^' => '', '.' => '',
         ';' => '', ',' => '', '`' => '', '\''=> '',
-        'php' => '', 'phar' => '', 'sh' => '',
     ];
 
     /**
