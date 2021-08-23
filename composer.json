@@ -1,6 +1,6 @@
 {
     "name": "marwanalsoltany/blend",
-    "type": "project",
+    "type": "library",
     "license": "MIT",
     "description": "A versatile and lightweight PHP task runner, designed with simplicity in mind.",
     "keywords": [
