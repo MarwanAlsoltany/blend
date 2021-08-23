@@ -92,7 +92,7 @@ class TaskRunner
     protected array $methods;
     protected array $executables;
     protected array $translations;
-    protected ?array $config;
+    protected array $config;
     protected bool $ansi;
     protected bool $quiet;
 
@@ -116,9 +116,9 @@ class TaskRunner
         $this->argv         = &$argv;
         $this->args         = array_slice($argv, 2);
 
-        $this->id           = $this->argv[0];
-        $this->name         = ucfirst(basename($this->id));
-        $this->envVar       = 'TR_' . strtr(strtoupper(basename($this->id)), ['.' => '_', '-' => '_']);
+        $this->id           = basename($this->argv[0]);
+        $this->name         = ucfirst($this->id);
+        $this->envVar       = 'TR_' . strtr(strtoupper($this->id), ['.' => '_', '-' => '_']);
         $this->version      = static::VERSION;
         $this->task         = $this->argv[1] ?? '';
         $this->tasks        = [];
@@ -256,8 +256,8 @@ class TaskRunner
         $cwd       = getcwd();
 
         while (!preg_match($rootRegex, $cwd)) {
-            $php  = sprintf('%s/%s.config.%s', $cwd, basename($this->id), 'php');
-            $json = sprintf('%s/%s.config.%s', $cwd, basename($this->id), 'json');
+            $php  = sprintf('%s/%s.config.%s', $cwd, $this->id, 'php');
+            $json = sprintf('%s/%s.config.%s', $cwd, $this->id, 'json');
 
             if (file_exists($file = $php) || file_exists($file = $json)) {
                 $type = strtoupper(pathinfo($file, PATHINFO_EXTENSION));
