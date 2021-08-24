@@ -14,7 +14,7 @@ A versatile and lightweight PHP task runner, designed with simplicity in mind.
 
 [![Open in Visual Studio Code][vscode-icon]][vscode-href]
 
-[![Tweet][tweet-icon]][tweet-href]
+[![Tweet][tweet-icon]][tweet-href] &nbsp; [![Star][github-icon]][github-href]
 
 
 
@@ -26,6 +26,7 @@ A versatile and lightweight PHP task runner, designed with simplicity in mind.
 [Installation](#installation)<br/>
 [Config](#config)<br/>
 [Examples](#examples)<br/>
+[API](#api)<br/>
 [Changelog](./CHANGELOG.md)
 
 </p>
@@ -89,7 +90,7 @@ This is the recommended way to install Blend. With this installation method, Ble
 
 #### Using PHAR:
 
-Download Blend PHAR archive form the [releases](https://github.com/MarwanAlsoltany/blend/releases) page or using the one of the commands down below:
+Download Blend PHAR archive form the [releases](https://github.com/MarwanAlsoltany/blend/releases) page or using one of the commands down below:
 
 ```sh
 php -r "copy('https://github.com/MarwanAlsoltany/blend/releases/latest/download/blend.phar', 'blend');"
@@ -103,7 +104,7 @@ With this installation method, you will get Blend as a portable PHAR file, you c
 
 #### Using Installer:
 
-Download Blend Setup directly from the [repository](./bin/setup), or using the one of the commands down below:
+Download Blend Setup directly from the [repository](./bin/setup), or using one of the commands down below:
 
 ```sh
 php -r "copy('https://raw.githubusercontent.com/MarwanAlsoltany/blend/master/bin/setup', 'setup');" && php setup
@@ -122,6 +123,8 @@ Using this method, the Blend executable and source will be installed in the curr
 ## Config
 
 Blend can be configured using either of the two available config formats:
+
+![#ff6347](https://via.placeholder.com/11/f03c15/000000?text=+) **Note:** *Refer to [`config/blend.config.php`](./config/blend.config.php) to learn more about the expected data types.*
 
 #### PHP Config `blend.config.php`
 
@@ -183,8 +186,6 @@ Blend can be configured using either of the two available config formats:
 }
 ```
 
-Refer to [config/blend.config.php](./config/blend.config.php) to learn more about the expected data types.
-
 #### How Does Config Loading Work?
 
 Blend will try to load the config from the current working directory, if nothing is to be found there, it will go one level upwards and look in the parent directory and so on until it reaches the root directory. If it does not find anything there either, Blend will start without config.
@@ -233,11 +234,11 @@ $blend->setVersion('vX.X.X');
 
 // these tasks are for demonstration purposes only
 
-$blend->addShellTask('ls', 'Lists content of the CWD or the passed one.', 'ls', '-lash');
+$blend->addShellTask('ls', 'Lists content of CWD or the passed one.', 'ls', '-lash');
 
 $blend->addCallbackTask('whoami', null, function () {
     /** @var Blend $this */
-    $this->say('@task'); // using the @task placeholder to get a string representation of the task class
+    $this->say('@task'); // using the @task placeholder to get a string representation of the task object
 });
 $blend->disableTask('whoami'); // preventing the task from being ran
 $blend->hideTask('whoami'); // preventing the task from being listed
@@ -306,6 +307,111 @@ $blend->start();
 ---
 
 
+## API
+
+Here is the full API of Blend ([TaskRunner](./src/TaskRunner.php) class).
+
+#### Constants
+
+| Constant | Description |
+|-|-|
+| `VERSION` | Package version. (public) |
+| `EXECUTABLES` | Default executables. (public) |
+| `TRANSLATIONS` | Default task name translations. (public) |
+| `CONFIG` | Default config. (public) |
+| `SUCCESS` | Task success code. (public) |
+| `FAILURE` | Task failure code. (public) |
+| `CALLBACK_TASK` | Task type callback. (public) |
+| `SHELL_TASK` | Task type shell. (public) |
+| `INTERNAL_TASK` | Task type internal. (protected) |
+
+#### Properties
+
+| Property | Description |
+|-|-|
+| `$argc` | A reference to the `$argc` global variable. (public) |
+| `$argv` | A reference to the `$argv` global variable. (public) |
+| `$args` | An array of the arguments that could be passed to the executed task. (public) |
+| `$envVar` | Environment variable. (private) |
+| `$path` | Task runner path. (protected) |
+| `$id` | Task runner ID. (protected) |
+| `$name` | Task runner name. (protected) |
+| `$version` | Task runner version. (protected) |
+| `$task` | The current task name passed to the task runner. (protected) |
+| `$tasks` | Task runner tasks. (protected) |
+| `$methods` | Magic methods added via `self::extend()`. (protected) |
+| `$executables` | The executables that will be loaded. (protected) |
+| `$translations` | The translations that will be applied to tasks names. (protected) |
+| `$config` | The currently loaded configuration. (protected) |
+| `$ansi` | Whether or not to turn on ANSI colors for the output. (protected) |
+| `$quiet` | Whether or not to turn on the output. (protected) |
+
+#### Public Methods
+
+| Method | Description |
+|-|-|
+| `extend()` | Extends the class with a magic method using the passed callback. |
+| `exec()` | Executes a shell command synchronously or asynchronous and prints out its result if possible. |
+| `addCallbackTask()` | Adds a task that executes the passed callback. |
+| `addShellTask()` | Adds a task that can be executed by the used shell (Bash for example). |
+| `addTask()` | Adds a new task. |
+| `removeTask()` | Removes a task from the available tasks. |
+| `hideTask()` | Hides a task by preventing it from being listed. The task can still get ran though. |
+| `disableTask()` | Disables a task by preventing it from being ran. The task will still get listed, but will be obfuscated. |
+| `getTask()` | Returns a task. |
+| `getTasks()` | Returns all tasks. |
+| `runTask()` | Runs a task. |
+| `run()` | Runs a task or starts the runner if no parameter is specified or the task is not found. |
+| `say()` | Writes a message out to the console. |
+| `sort()` | Sorts the tasks alphabetically. |
+| `start()` | Starts the task runner. |
+| `getName()` | Returns the task runner name. |
+| `setName()` | Sets the task runner name. |
+| `getVersion()` | Returns the task runner version. |
+| `setVersion()` | Sets the task runner version. |
+| `isAnsi()` | Returns whether the task runner output is currently using ANSI colors or not. |
+| `setAnsi()` | Sets the task runner ANSI output value. |
+| `isQuiet()` | Returns whether the task runner output is currently quiet or not. |
+| `setQuiet()` | Sets the task runner quiet output value. |
+
+#### Protected Methods
+
+| Method | Description |
+|-|-|
+| `terminate()` | Terminates the task runner by exiting the script. |
+| `bootstrap()` | Bootstraps the task runner by adding predefined tasks. |
+| `load()` | Loads tasks from the specified executables array. |
+| `translate()` | Translates the passed string using the specified translations. |
+| `format()` | Formats a string like `*printf()` functions with the ability to add ANSI colors. |
+| `write()` | Writes out a formatted text block from the specified lines and format value. |
+| `displayHelp()` | Prints out a help message listing all tasks of the task runner. |
+| `displayHint()` | Prints out a hint message listing tasks matching the current task of the task runner. |
+| `displayList()` | Prints out a list of all available tasks of the task runner. |
+| `displayExec()` | Prints out a the result of executing the current argument of the task runner. |
+| `listTasks()` | Prints out a list of the passed tasks. |
+| `getUser()` | Returns the task runner user. |
+
+#### Private Methods
+
+| Method | Description |
+|-|-|
+| `registerHandlers()` | Registers error handler, exception handler and the shutdown function. |
+| `restoreHandlers()` | Restores the error handler and the exception handler. |
+| `checkEnvironment()` | Checks the environment for TR_* variable, validates its pattern and updates class internal state. |
+| `checkConfiguration()` | Checks the CWD or its parent(s) for a configuration file, validates its entries and updates class internal state. |
+
+#### Magic Methods
+
+| Method | Description |
+|-|-|
+| `handleError()` | Error handler function. (public) |
+| `handleException()` | Exception handler function. (public) |
+| `shutdown()` | Shutdown function. This method is abstract, implement it using `self::extend()`. (public) |
+
+
+---
+
+
 ## License
 
 Blend is an open-source project licensed under the [**MIT**](./LICENSE) license.
@@ -330,6 +436,7 @@ Copyright (c) 2021 Marwan Al-Soltany. All rights reserved.
 [travis-icon]: https://img.shields.io/travis/com/MarwanAlsoltany/blend/master.svg?style=flat&logo=travis
 [vscode-icon]: https://open.vscode.dev/badges/open-in-vscode.svg
 [tweet-icon]: https://img.shields.io/twitter/url/http/shields.io.svg?style=social
+[github-icon]: https://img.shields.io/github/stars/MarwanAlsoltany/blend.svg?style=social&label=Star&maxAge=259200
 
 [php-href]: https://github.com/MarwanAlsoltany/blend/search?l=php
 [version-href]: https://packagist.org/packages/marwanalsoltany/blend
@@ -338,4 +445,5 @@ Copyright (c) 2021 Marwan Al-Soltany. All rights reserved.
 [maintenance-href]: https://github.com/MarwanAlsoltany/blend/graphs/commit-activity
 [travis-href]: https://travis-ci.com/MarwanAlsoltany/blend
 [vscode-href]: https://open.vscode.dev/MarwanAlsoltany/blend
-[tweet-href]: https://twitter.com/intent/tweet?url=https%3A%2F%2Fgithub.com%2FMarwanAlsoltany%2Fblend&text=A%20versatile%20and%20lightweight%20PHP%20task%20runner%2C%20designed%20with%20simplicity%20in%20mind.
+[tweet-href]: https://twitter.com/intent/tweet?text=A%20versatile%20and%20lightweight%20PHP%20task%20runner%2C%20designed%20with%20simplicity%20in%20mind.%20&hashtags=%23PHP%20%23CLI
+[github-href]: https://GitHub.com/MarwanAlsoltany/blend/stargazers
