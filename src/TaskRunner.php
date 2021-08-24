@@ -89,22 +89,81 @@ class TaskRunner
     protected const INTERNAL_TASK = 'internal';
 
 
+    /**
+     * @var int A reference to the `$argc` global variable.
+     */
     public int $argc;
+
+    /**
+     * @var array 	A reference to the `$argv` global variable.
+     */
     public array $argv;
+
+    /**
+     * @var array An array of the arguments that could be passed to the executed task.
+     */
     public array $args;
 
+
+    /**
+     * @var string Environment variable.
+     */
     private string $envVar;
 
+
+    /**
+     * @var string Task runner ID.
+     */
     protected string $id;
+
+    /**
+     * @var string Task runner name.
+     */
     protected string $name;
+
+    /**
+     * @var string Task runner version.
+     */
     protected string $version;
+
+    /**
+     * @var string The current task name passed to the task runner.
+     */
     protected string $task;
+
+    /**
+     * @var array Task runner tasks.
+     */
     protected array $tasks;
+
+    /**
+     * @var array Magic methods added via `self::extend()`.
+     */
     protected array $methods;
+
+    /**
+     * @var array The executables that will be loaded.
+     */
     protected array $executables;
+
+    /**
+     * @var array The translations that will be applied to tasks names.
+     */
     protected array $translations;
+
+    /**
+     * @var array The currently loaded configuration
+     */
     protected array $config;
+
+    /**
+     * @var bool Whether or not to turn on ANSI colors for the output.
+     */
     protected bool $ansi;
+
+    /**
+     * @var bool Whether or not to turn on the output.
+     */
     protected bool $quiet;
 
 
@@ -356,7 +415,7 @@ class TaskRunner
     }
 
     /**
-     * Loads tasks from the specified executables array and applies translations to them.
+     * Loads tasks from the specified executables array.
      *
      * @param array[] $executables An array where the key is the executer program and the value is an array of glob patterns.
      *
@@ -962,7 +1021,7 @@ class TaskRunner
     }
 
     /**
-     * Returns all task.
+     * Returns all tasks.
      *
      * @return object[]
      */
