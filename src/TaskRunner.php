@@ -392,8 +392,8 @@ class TaskRunner
                 ->addTask(
                     $task['name'] ?? $name,
                     $task['description'] ?? null,
-                    $task['executor'] ?? 'shell',
-                    $task['executable'] ?? 'echo',
+                    $task['executor'] ?? '',
+                    $task['executable'] ?? '',
                     $task['arguments'] ?? null
                 )
                 ->getTask($task['name'] ?? $name)
@@ -647,8 +647,8 @@ class TaskRunner
         );
 
         $pattern = strlen($this->task) > 1
-            ? sprintf('/(%s)/i', implode(')|(', array_filter(explode('\:', preg_quote($this->task)))))
-            : sprintf('/^%s+/i', preg_quote($this->task));
+            ? sprintf('/(%s)/i', implode(')|(', array_filter(explode('\:', preg_quote($this->task, '/')))))
+            : sprintf('/^%s+/i', preg_quote($this->task, '/'));
 
         $matches = preg_grep($pattern, array_keys($this->tasks)) ?: [];
 
