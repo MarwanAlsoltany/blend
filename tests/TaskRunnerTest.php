@@ -29,6 +29,13 @@ class TaskRunnerTest extends TestCase
     }
 
 
+    public function testCastingTheRunnerToString()
+    {
+        $this->expectOutputRegex('/(' . preg_quote(TaskRunner::class) . ')/');
+
+        echo $this->runner;
+    }
+
     public function testExtendMethodCanBeUsedToExtendTheClassInstanceWithNewMethods()
     {
         $testCase = $this;
