@@ -4,6 +4,21 @@ All notable changes to **Blend** will be documented in this file.
 
 <br />
 
+## [[1.0.3] - 2021-08-24](https://github.com/MarwanAlsoltany/blend/compare/v1.0.3...v1.0.4)
+- Update `TaskRunner` class:
+    - Add new `$path` property.
+    - Add `__toString()` magic method.
+    - Add `@runner` placeholder.
+    - Remove fallback values of config tasks in `bootstrap()` method.
+    - Update properties and methods DocBlocks.
+    - Bump package version.
+- Update `blend.php` class:
+    - Update `config:generate` task.
+- Update `TaskRunnerTest` class:
+    * Add `__toString()` magic method test.
+
+<br />
+
 ## [[1.0.3] - 2021-08-24](https://github.com/MarwanAlsoltany/blend/compare/v1.0.2...v1.0.3)
 - Update `TaskRunner` class:
     - Update `TRANSLATIONS` class constant to prevent unexpected name translation.
