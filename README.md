@@ -42,7 +42,7 @@ A versatile and lightweight PHP task runner, designed with simplicity in mind.
 
 <div align="center">
 
-<img src="./blend-demo.gif" width="850" />
+![Blend Demo](./blend-demo.gif)
 
 </div>
 
@@ -89,20 +89,28 @@ This is the recommended way to install Blend. With this installation method, Ble
 
 #### Using PHAR:
 
-Download Blend PHAR archive form the [releases](https://github.com/MarwanAlsoltany/blend/releases) page or using the command down below (do not forget to adjust the version segment):
+Download Blend PHAR archive form the [releases](https://github.com/MarwanAlsoltany/blend/releases) page or using the one of the commands down below:
 
 ```sh
-php -r "copy('https://github.com/MarwanAlsoltany/blend/releases/download/vX.X.X/blend.phar', 'blend');"
+php -r "copy('https://github.com/MarwanAlsoltany/blend/releases/latest/download/blend.phar', 'blend');"
 ```
 
-With this installation method, you will get Blend as a portable PHAR file, you can place it anywhere you want or even include it in your `PATH` for easy access. With this installation method, you have to supply a config file in order to configure/customize Blend. This installation method exists for portability where Blend is not bound to a specific project and a config file is sufficient.
+```sh
+php -r "copy('https://git.io/JEseO', 'blend');"
+```
+
+With this installation method, you will get Blend as a portable PHAR file, you can place it anywhere you want or even include it in your `PATH` for easy access. With this installation method, you have to supply a config file in order to configure/customize Blend. This installation method exists for portability where Blend is not bound to a specific project and a config file is sufficient. Starting from `v1.0.3`, the PHAR installation method is distinguished from other methods with the task `phar:update` that will update your PHAR to the latest release available in this repository.
 
 #### Using Installer:
 
-Download Blend Setup directly from the [repository](./bin/setup), or using the command down below:
+Download Blend Setup directly from the [repository](./bin/setup), or using the one of the commands down below:
 
 ```sh
 php -r "copy('https://raw.githubusercontent.com/MarwanAlsoltany/blend/master/bin/setup', 'setup');" && php setup
+```
+
+```sh
+php -r "copy('https://git.io/JEseR', 'setup');" && php setup
 ```
 
 Using this method, the Blend executable and source will be installed in the current working directory (to take advantage of IDEs Intellisense when configuring Blend programmatically). With this installation method, you can configure Blend programmatically using the `blend` executable file or by supplying a config file in the current working directory. This installation method exists merely for legacy projects, where Composer is not an option and programmable config is required.
@@ -119,8 +127,6 @@ Blend can be configured using either of the two available config formats:
 
 ```php
 <?php return [
-    // Refer to config/blend.config.php to learn more about the expected data types
-
     'autoload' => null,
     'merge' => true,
     'executables' => [
@@ -151,8 +157,6 @@ Blend can be configured using either of the two available config formats:
 
 ```jsonc
 {
-    // Refer to config/blend.config.php to learn more about the expected data types
-
     "autoload": null,
     "merge": true,
     "executables": {
@@ -178,6 +182,8 @@ Blend can be configured using either of the two available config formats:
     }
 }
 ```
+
+Refer to [config/blend.config.php](./config/blend.config.php) to learn more about the expected data types.
 
 #### How Does Config Loading Work?
 
