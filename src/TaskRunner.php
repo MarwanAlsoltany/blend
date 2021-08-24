@@ -112,6 +112,11 @@ class TaskRunner
 
 
     /**
+     * @var string Task runner path.
+     */
+    protected string $path;
+
+    /**
      * @var string Task runner ID.
      */
     protected string $id;
@@ -186,6 +191,7 @@ class TaskRunner
         $this->argv         = &$argv;
         $this->args         = array_slice($argv, 2);
 
+        $this->path         = realpath($this->argv[0]);
         $this->id           = basename($this->argv[0]);
         $this->name         = ucfirst($this->id);
         $this->envVar       = 'TR_' . strtr(strtoupper($this->id), ['.' => '_', '-' => '_']);
@@ -224,6 +230,11 @@ class TaskRunner
         }
 
         throw new \BadMethodCallException("Call to undefined method {$class}::{$method}()");
+    }
+
+    public function __toString()
+    {
+        return sprintf('%s [%s]', self::class, $this->path);
     }
 
 
@@ -530,7 +541,7 @@ class TaskRunner
 
     /**
      * Writes out a formatted text block from the specified lines and format value.
-     * Available placeholders: `@name`, `@executor`, `@executable`, `@task`, and `@(foreground,background)[{text}]`
+     * Available placeholders: `@name`, `@executor`, `@executable`, `@task`, `@runner`, and `@(foreground,background)[{text}]`
      *
      * @param string[] $lines An array of strings with format placeholders.
      * @param mixed[] $formatValues [optional] Format values.
@@ -547,6 +558,7 @@ class TaskRunner
 
         if ($task = $this->getTask($this->task)) {
             $placeholders = [
+                '@runner'     => $this,
                 '@task'       => $task,
                 '@name'       => $task->name,
                 '@executor'   => $task->executor,
@@ -1130,8 +1142,8 @@ class TaskRunner
 
     /**
      * Writes a message out to the console.
-     * Use the `@name`, `@executor`, `@executable`, and/or `@task` placeholders to get their corresponding values,
-     * these placeholder are only available if a task is being ran.
+     * Use the `@name`, `@executor`, `@executable`, `@task` and/or `@runner` placeholders to get
+     * their corresponding values, these placeholder are only available if a task is being ran.
      * Use the `@(foreground,background)[{text}]` placeholder to make colorful message segments.
      * Available colors are: `black`, `red`, `green`, `yellow`, `blue`, `magenta`, `cyan`, `white`, and `default`.
      * Color name can be the initial letter only. Incase of collisions, add letters until it's unique.
