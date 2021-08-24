@@ -2,6 +2,18 @@
 
 All notable changes to **Blend** will be documented in this file.
 
+<br />
+
+## [[1.0.3] - 2021-08-24](https://github.com/MarwanAlsoltany/blend/compare/v1.0.2...v1.0.3)
+- Update `TaskRunner` class:
+    - Update `TRANSLATIONS` class constant to prevent unexpected name translation.
+    - Bump package version.
+- Update `blend.php` class:
+    - Add `phar:update` task.
+    - Add `declare(strict_types=1)` declaration.
+    - Add namespace to the file.
+
+<br />
 
 ## [[1.0.2] - 2021-08-23](https://github.com/MarwanAlsoltany/blend/compare/v1.0.1...v1.0.2)
 - Update `TaskRunner` class:
