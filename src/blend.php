@@ -32,7 +32,7 @@ $blend->addCallbackTask(
                 'Use the @(y)[{--overwrite}] flag to overwrite it.'
             ]);
 
-            return 1;
+            return Blend::FAILURE;
         }
 
         $example = [
@@ -51,7 +51,7 @@ $blend->addCallbackTask(
             'tasks'        => [
                 'ls' => [
                     'name'        => 'ls',
-                    'description' => 'Lists content of the current directory or the passed one. (example task)',
+                    'description' => 'Lists content of CWD or the passed one (example task).',
                     'executor'    => 'shell',
                     'executable'  => 'ls',
                     'arguments'   => '-lash',
@@ -66,7 +66,9 @@ $blend->addCallbackTask(
         $filename  = basename($file);
         $directory = dirname($file);
 
-        $this->say("Generated '@(y)[{{$filename}}]' in '@(y)[{{$directory}}]'");
+        $this->say("Generated '@(g)[{{$filename}}]' in '@(y)[{{$directory}}]'");
+
+        return Blend::SUCCESS;
     }
 );
 
