@@ -2,65 +2,58 @@
 
 return [
 
-    // (string) Config format version.
-    'version'      => '1',
+    // (string|null) The autoload file to use (useful when using PHP callable as task executable).
+    'autoload' => null,
 
-    // (string|null) The autoload file to use.
-    'autoload'     => null,
+    // (bool|null) Whether or not to merge the supplied executables/translations with the default ones.
+    'merge' => true,
 
-    // (array|null) Whether or not to merge the supplied executables/translations with the default ones.
-    'strategy'     => [
-        'mergeExecutables'  => true,
-        'mergeTranslations' => true,
-    ],
-
-    // (array[]|null) The executables to load.
-    'executables'  => [
+    // (array[]|null) The executables to load as tasks.
+    'executables' => [
         'php' => [
-            './bin/*'
+            './bin/*',
         ],
     ],
 
-    // (array[]|null) The translations to apply.
+    // (string[]|null) The translations to apply to tasks names.
     'translations' => [
         'abc' => 'xyz',
     ],
 
     // (bool|null) Whether or not to turn on ANSI colors for the output.
-    'ansi'         => true,
+    'ansi' => true,
 
     // (bool|null) Whether or not to turn on the output.
-    'quiet'        => false,
+    'quiet' => false,
 
     // (array[]|null) The tasks to add.
-    'tasks'        => [
+    'tasks' => [
 
-        // (array|null) Task definition (key = Task name, value = Task parameters).
+        // (array|null) Task definition (key = task fallback name, value = task parameters).
         'some:task' => [
 
             // (string|null) If not specified, the key of the containing array will be used instead.
-            'name'        => 'Some task',
+            'name' => 'some:task',
 
             // (string|null) If not specified a fallback will be used instead.
             'description' => 'Some task',
 
             // (string) Valid values are 'shell', 'callback', or any available program (PHP for example).
-            'executor'    => 'shell',
+            'executor' => 'shell',
 
-            // (string|callable) Depending on the executor, either a string containing command name or a path to a file, or a valid php callable.
-            'executable'  => 'ls',
+            // (string|callable) Depending on the executor, either a string containing a shell command, a path to an executable file, or a valid PHP callable.
+            'executable' => 'ls',
 
-            // (string|array|null) Depending on the executor, either a string containing command options/arguments, or an array of arguments to pass to the callback.
-            'arguments'   => '-lash',
+            // (string|array|null) Depending on the executor, either a string containing shell command options/arguments, or an array of arguments to pass to the callback.
+            'arguments' => '-lash',
 
-            // (bool) Whether or not to hide the task from being listed.
-            'hidden'      => false,
+            // (bool|null) Whether or not to hide the task from being listed.
+            'hidden' => false,
 
-            // (bool) Whether or not to prevent the task from being ran.
-            'disabled'    => false,
+            // (bool|null) Whether or not to prevent the task from being ran.
+            'disabled' => false,
 
         ],
 
     ],
-
 ];
