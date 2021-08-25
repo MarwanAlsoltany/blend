@@ -26,7 +26,7 @@ class TaskRunner
     /**
      * @var string Package version.
      */
-    public const VERSION = 'v1.0.4';
+    public const VERSION = 'v1.0.5';
 
     /**
      * @var array Default executables.
@@ -793,8 +793,8 @@ class TaskRunner
      */
     public function exec($cmd, bool $async = false): int
     {
-        $commands  = (array)$cmd;
-        $isWindows = PHP_OS === 'WINNT';
+        $commands = (array)$cmd;
+        $windows  = PHP_OS === 'WINNT';
 
         $code = null;
         $pid  = null;
@@ -806,23 +806,21 @@ class TaskRunner
                 throw new \InvalidArgumentException('No valid command is specified');
             }
 
-            if ($async) {
-                $wrapper = $isWindows ? 'start /B %s > NUL' : '/usr/bin/nohup %s > /dev/null 2>&1 & echo $!;';
-                $command = sprintf($wrapper, $command);
+            $wrapper = $async ? ($windows ? 'start /B %s > NUL' : '/usr/bin/nohup %s > /dev/null 2>&1 & echo $!;') : '%s 2>&1';
+            $command = sprintf($wrapper, $command);
 
-                if ($isWindows) {
-                    $descSpec = [0 => ['pipe', 'r'], 1 => ['pipe', 'w'], 2 => ['pipe', 'w']];
-                    $process  = proc_open($command, $descSpec, $pipes);
-                    $status   = proc_get_status($process);
-                    $parentId = $status['pid'] ?? getmypid();
-                    proc_close($process);
+            if ($async && $windows) {
+                $descSpec = [0 => ['pipe', 'r'], 1 => ['pipe', 'w'], 2 => ['pipe', 'w']];
+                $process  = proc_open($command, $descSpec, $pipes);
+                $status   = proc_get_status($process);
+                $parentId = $status['pid'] ?? getmypid();
+                $code     = proc_close($process);
 
-                    $ids = `wmic process get ParentProcessId,ProcessId | findStr {$parentId}`;
-                    $ids = explode(' ', trim($ids ?? ' '));
-                    $pid = end($ids);
+                $ids = `wmic process get ParentProcessId,ProcessId | findStr {$parentId}`;
+                $ids = explode(' ', trim($ids ?? ' '));
+                $pid = end($ids);
 
-                    continue;
-                }
+                continue;
             }
 
             $pid = exec($command, $output, $code);
