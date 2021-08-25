@@ -14,8 +14,7 @@ A versatile and lightweight PHP task runner, designed with simplicity in mind.
 
 [![Open in Visual Studio Code][vscode-icon]][vscode-href]
 
-[![Tweet][tweet-icon]][tweet-href] &nbsp; [![Star][github-icon]][github-href]
-
+[![Tweet][tweet-icon]][tweet-href] [![Star][github-icon]][github-href]
 
 
 <details>
@@ -33,7 +32,8 @@ A versatile and lightweight PHP task runner, designed with simplicity in mind.
 </details>
 
 <br/>
-<small>If you like this project and would like to support its development, giving it a :star: would be appreciated!</small>
+
+<sup>If you like this project and would like to support its development, giving it a :star: would be appreciated!</sup>
 
 </div>
 
@@ -86,7 +86,7 @@ Require Blend through Composer using:
 composer require marwanalsoltany/blend
 ```
 
-This is the recommended way to install Blend. With this installation method, Blend will be installed just like any normal Composer package. You can interact with it using either the `vendor/bin/blend` executable with a config file in the current working directory, or by requiring it in a stand-alone file and supplying the config programmatically after creating you own executable file. You can of course install it globally and let it be system-wide accessible.
+This is the recommended way to install Blend. With this installation method, Blend will be installed just like any normal Composer package. You can interact with it using either the `vendor/bin/blend` executable with a config file in the current working directory, or by requiring it in a stand-alone file and supplying the config programmatically. You can of course install it globally and let it be system-wide accessible.
 
 #### Using PHAR:
 
@@ -100,7 +100,7 @@ php -r "copy('https://github.com/MarwanAlsoltany/blend/releases/latest/download/
 php -r "copy('https://git.io/JEseO', 'blend');"
 ```
 
-With this installation method, you will get Blend as a portable PHAR file, you can place it anywhere you want or even include it in your `PATH` for easy access. With this installation method, you have to supply a config file in order to configure/customize Blend. This installation method exists for portability where Blend is not bound to a specific project and a config file is sufficient. Starting from `v1.0.3`, the PHAR installation method is distinguished from other methods with the task `phar:update` that will update your PHAR to the latest release available in this repository.
+With this installation method, you will get Blend as a portable PHAR archive, you can place it anywhere you want or even include it in your `PATH` for easy access. With this installation method, you have to supply a config file in order to configure/customize Blend. This installation method exists for portability where Blend is not bound to a specific project and a config file is sufficient. Starting from `v1.0.3`, the PHAR installation method is distinguished from other methods with the task `phar:update` that will update your PHAR to the latest release available in this repository.
 
 #### Using Installer:
 
@@ -114,7 +114,7 @@ php -r "copy('https://raw.githubusercontent.com/MarwanAlsoltany/blend/master/bin
 php -r "copy('https://git.io/JEseR', 'setup');" && php setup
 ```
 
-Using this method, the Blend executable and source will be installed in the current working directory (to take advantage of IDEs Intellisense when configuring Blend programmatically). With this installation method, you can configure Blend programmatically using the `blend` executable file or by supplying a config file in the current working directory. This installation method exists merely for legacy projects, where Composer is not an option and programmable config is required.
+Using this method, the Blend executable and source will be installed in the current working directory (to take advantage of IDEs Intellisense when configuring Blend programmatically). With this installation method, you can configure Blend programmatically using the `blend` executable file or by supplying a config file in CWD. This installation method exists merely for legacy projects, where Composer is not an option and programmable config is required.
 
 
 ---
@@ -188,9 +188,9 @@ Blend can be configured using either of the two available config formats:
 
 #### How Does Config Loading Work?
 
-Blend will try to load the config from the current working directory, if nothing is to be found there, it will go one level upwards and look in the parent directory and so on until it reaches the root directory. If it does not find anything there either, Blend will start without config.
+Blend will try to load the config from the current working directory, if nothing is to be found there, it will go one level upwards and look in the parent directory and so on until it reaches the root directory. if it does not find anything there either, Blend will start without config.
 
-![#1e90ff](https://via.placeholder.com/11/1e90ff/000000?text=+) **Fact:** *Although JSON config format is recommended, PHP config has precedence. This means, if the two config formats are to be found in the same working, the PHP config will get loaded instead of the JSON one. This is merely because the PHP config can be executed and is, therefore, more powerful.*
+![#1e90ff](https://via.placeholder.com/11/1e90ff/000000?text=+) **Fact:** *Although JSON config format is recommended, PHP config has precedence. This means, if the two config formats are to be found in the same directory, the PHP config will get loaded instead of the JSON one. This is merely because the PHP config can be executed and is, therefore, more powerful.*
 
 
 ---
@@ -309,7 +309,7 @@ $blend->start();
 
 ## API
 
-Here is the full API of Blend ([TaskRunner](./src/TaskRunner.php) class).
+Here is the full API of Blend ([`TaskRunner`](./src/TaskRunner.php) class).
 
 #### Constants
 
