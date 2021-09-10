@@ -26,7 +26,7 @@ class TaskRunner
     /**
      * @var string Package version.
      */
-    public const VERSION = 'v1.0.5';
+    public const VERSION = 'v1.0.6';
 
     /**
      * @var array Default executables.
@@ -399,17 +399,9 @@ class TaskRunner
         }
 
         foreach ((array)$this->config['tasks'] as $name => $task) {
-            $this
-                ->addTask(
-                    $task['name'] ?? $name,
-                    $task['description'] ?? null,
-                    $task['executor'] ?? '',
-                    $task['executable'] ?? '',
-                    $task['arguments'] ?? null
-                )
-                ->getTask($task['name'] ?? $name)
-                ->setHidden($task['hidden'] ?? false)
-                ->setDisabled($task['disabled'] ?? false);
+            $task['name'] = $task['name'] ?? (string)$name;
+
+            $this->makeTask($task);
         }
 
         $tasks = $this->load($this->executables) ?? [];
@@ -957,6 +949,38 @@ class TaskRunner
         $this->tasks[$name] = $task;
 
         return $this;
+    }
+
+    /**
+     * Makes a task from array representation of a task object and adds it to the available tasks.
+     *
+     * @param array $task An associative array that represents a task object with the following keys:
+     * `name`, `description`, `executor`, `executable`, `arguments`, `hidden`, `disabled`.
+     * Note: the same rules of tasks supplied by config file applies to this array.
+     *
+     * @return $this
+     */
+    public function makeTask(array $task)
+    {
+        $task = (object)[
+            'name'        => $task['name']        ?? 'task-' . md5(uniqid('', true)),
+            'description' => $task['description'] ?? null,
+            'executor'    => $task['executor']    ?? '',
+            'executable'  => $task['executable']  ?? '',
+            'arguments'   => $task['arguments']   ?? null,
+            'hidden'      => $task['hidden']      ?? false,
+            'disabled'    => $task['disabled']    ?? false,
+        ];
+
+        $handler = $task->executor == static::SHELL_TASK || $task->executor == static::CALLBACK_TASK
+            ? 'add' . ucfirst(strtolower($task->executor)) . 'Task'
+            : 'addTask';
+
+        $this
+            ->{$handler}($task->name, $task->description, $task->executable, $task->arguments)
+            ->getTask($task->name)
+            ->setHidden($task->hidden)
+            ->setDisabled($task->disabled);
     }
 
     /**
