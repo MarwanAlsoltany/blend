@@ -355,6 +355,7 @@ Here is the full API of Blend ([`TaskRunner`](./src/TaskRunner.php) class).
 | `addCallbackTask()` | Adds a task that executes the passed callback. |
 | `addShellTask()` | Adds a task that can be executed by the used shell (Bash for example). |
 | `addTask()` | Adds a new task. |
+| `makeTask()` | Makes a task from array representation of a task object and adds it to the available tasks. |
 | `removeTask()` | Removes a task from the available tasks. |
 | `hideTask()` | Hides a task by preventing it from being listed. The task can still get ran though. |
 | `disableTask()` | Disables a task by preventing it from being ran. The task will still get listed, but will be obfuscated. |
@@ -387,7 +388,7 @@ Here is the full API of Blend ([`TaskRunner`](./src/TaskRunner.php) class).
 | `displayHelp()` | Prints out a help message listing all tasks of the task runner. |
 | `displayHint()` | Prints out a hint message listing tasks matching the current task of the task runner. |
 | `displayList()` | Prints out a list of all available tasks of the task runner. |
-| `displayExec()` | Prints out a the result of executing the current argument of the task runner. |
+| `displayExec()` | Prints out the result of executing the current argument of the task runner. |
 | `listTasks()` | Prints out a list of the passed tasks. |
 | `getUser()` | Returns the task runner user. |
 
@@ -395,7 +396,7 @@ Here is the full API of Blend ([`TaskRunner`](./src/TaskRunner.php) class).
 
 | Method | Description |
 |-|-|
-| `registerHandlers()` | Registers error handler, exception handler and the shutdown function. |
+| `registerHandlers()` | Registers error handler, exception handler, and shutdown function. |
 | `restoreHandlers()` | Restores the error handler and the exception handler. |
 | `checkEnvironment()` | Checks the environment for TR_* variable, validates its pattern and updates class internal state. |
 | `checkConfiguration()` | Checks the CWD or its parent(s) for a configuration file, validates its entries and updates class internal state. |
@@ -436,7 +437,7 @@ Copyright (c) 2021 Marwan Al-Soltany. All rights reserved.
 [travis-icon]: https://img.shields.io/travis/com/MarwanAlsoltany/blend/master.svg?style=flat&logo=travis
 [vscode-icon]: https://open.vscode.dev/badges/open-in-vscode.svg
 [tweet-icon]: https://img.shields.io/twitter/url/http/shields.io.svg?style=social
-[github-icon]: https://img.shields.io/github/stars/MarwanAlsoltany/blend.svg?style=social&label=Star&maxAge=259200
+[github-icon]: https://img.shields.io/github/stars/MarwanAlsoltany/blend.svg?style=social&label=Star
 
 [php-href]: https://github.com/MarwanAlsoltany/blend/search?l=php
 [version-href]: https://packagist.org/packages/marwanalsoltany/blend
