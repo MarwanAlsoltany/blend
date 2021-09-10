@@ -826,7 +826,7 @@ class TaskRunner
             $pid = exec($command, $output, $code);
 
             if (!$async) foreach ($output as $line) {
-                $this->write(['%3s @(blue)[{>}] %s'], ['', $line]);
+                $this->write(['%3s @(%s)[{>}] %s'], ['', $code > static::SUCCESS ? 'r' : 'g', $line]);
             }
         }
 
@@ -1078,11 +1078,12 @@ class TaskRunner
         }
 
         if ($executor === static::CALLBACK_TASK) {
-            $executor = '';
+            $executor  = '';
+            $arguments = array_values((array)$arguments);
             try {
-                $result = $executable->bindTo($this)(...(array)$arguments) ?? static::SUCCESS;
+                $result = $executable->bindTo($this)(...$arguments) ?? static::SUCCESS;
             } catch (\Exception $e) {
-                $result = $executable($this, ...(array)$arguments) ?? static::SUCCESS;
+                $result = $executable($this, ...$arguments) ?? static::SUCCESS;
             }
         }
 
@@ -1096,7 +1097,7 @@ class TaskRunner
 
         $this->write(
             ['[@(c)[{%s}]] @(b,%s)[{ %s }] @(m)[{%.2fms}]', ''],
-            [date('H:i:s'), $result > 0 ? 'r' : 'g', 'DONE', $time]
+            [date('H:i:s'), $result > static::SUCCESS ? 'r' : 'g', 'DONE', $time]
         );
 
         return $result;
