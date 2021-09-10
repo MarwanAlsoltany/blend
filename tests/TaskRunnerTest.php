@@ -268,6 +268,31 @@ class TaskRunnerTest extends TestCase
         $this->assertIsString((string)$task->executable);
     }
 
+    public function testMakeTaskMethodCreatesATask()
+    {
+        $this->runner->makeTask([
+            'name' => 'test:task:1',
+            'description' => 'Test task',
+            'executor' => 'shell',
+            'executable' => 'php',
+            'arguments' => '-v',
+            'hidden' => true,
+            'disabled' => true,
+        ]);
+
+        $this->runner->makeTask([
+            'name' => 'test:task:2',
+            'executor' => 'callback',
+            'executable' => function () {
+                /** @var TaskRunner $this */
+                $this->say('Test!');
+            },
+        ]);
+
+        $this->assertIsObject($this->runner->getTask('test:task:1'));
+        $this->assertIsObject($this->runner->getTask('test:task:2'));
+    }
+
     public function testRemoveTaskMethod()
     {
         $this->runner->addTask('test:task', 'Test task', 'php', '', '-v');
