@@ -240,8 +240,8 @@ class TaskRunner
 
     /**
      * Extends the class with a magic method using the passed callback.
-     * The passed function will get converted to a closure and bound to the
-     * object with `object` visibility (can access private and protected members).
+     * The passed function will get converted to a closure and get bound to the object
+     * with `object` visibility (can access private, protected, and public members).
      *
      * @param string $name Method name.
      * @param callable $callback The callback to use as method body.
@@ -257,7 +257,7 @@ class TaskRunner
     }
 
     /**
-     * Registers error handler, exception handler and the shutdown function.
+     * Registers error handler, exception handler, and shutdown function.
      *
      * @return void
      */
@@ -724,7 +724,7 @@ class TaskRunner
     }
 
     /**
-     * Prints out a the result of executing the current argument of the task runner.
+     * Prints out the result of executing the current argument of the task runner.
      *
      * @return void
      */
