@@ -4,7 +4,19 @@ All notable changes to **Blend** will be documented in this file.
 
 <br />
 
-## [[1.0.4] - 2021-08-25](https://github.com/MarwanAlsoltany/blend/compare/v1.0.4...v1.0.5)
+## [[1.0.6] - 2021-09-11](https://github.com/MarwanAlsoltany/blend/compare/v1.0.5...v1.0.6)
+- Update `TaskRunner` class:
+    - Add `runTask()` method.
+    - Update `runTask()` method.
+    - Update `exec()` method.
+    - Fix some typos in methods DocBlocks.
+    - Bump package version.
+- Update `TaskRunnerTest` class:
+    - Add `makeTask()` method test.
+
+<br />
+
+## [[1.0.5] - 2021-08-25](https://github.com/MarwanAlsoltany/blend/compare/v1.0.4...v1.0.5)
 - Update `TaskRunner` class:
     - Refactor `exec()` method.
     - Bump package version.
@@ -14,7 +26,7 @@ All notable changes to **Blend** will be documented in this file.
 
 <br />
 
-## [[1.0.3] - 2021-08-24](https://github.com/MarwanAlsoltany/blend/compare/v1.0.3...v1.0.4)
+## [[1.0.4] - 2021-08-24](https://github.com/MarwanAlsoltany/blend/compare/v1.0.3...v1.0.4)
 - Update `TaskRunner` class:
     - Add new `$path` property.
     - Add `__toString()` magic method.
