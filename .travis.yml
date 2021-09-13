@@ -27,7 +27,11 @@ before_script:
 
 script:
     - ls -l # for debugging
-    - vendor/bin/phpunit --coverage-clover=coverage.clover
+    - vendor/bin/phpunit --coverage-clover=coverage.xml
+
+after_success:
+    - ls -l # for debugging
+    - bash <(curl -s https://codecov.io/bash)
 
 after_script:
     - echo "$ECHO_MESSAGE Finished Successfly"
