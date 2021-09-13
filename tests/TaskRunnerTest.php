@@ -174,6 +174,22 @@ class TaskRunnerTest extends TestCase
         $this->runner->exec(['', '']);
     }
 
+    public function testGetExecResultMethodReturnsTheResultOfAnExecutedCommand()
+    {
+        $this->expectOutputRegex('/(PHP)/');
+
+        $this->runner->exec('php -v');
+
+        $result1 = $this->runner->getExecResult('php -v');
+        $result2 = $this->runner->getExecResult();
+
+        $this->assertEquals($result1, $result2);
+        $this->assertIsString($result1['command']);
+        $this->assertStringContainsString('Zend Engine', $result1['output']);
+        $this->assertIsInt($result1['code']);
+        $this->assertNull($result1['pid']);
+    }
+
     public function testAddTaskMethodAddsATask()
     {
         $this->runner->addTask('test:task', 'Test task', TaskRunner::SHELL_TASK, 'php', '-v');
