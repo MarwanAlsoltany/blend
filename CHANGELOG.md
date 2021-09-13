@@ -4,9 +4,20 @@ All notable changes to **Blend** will be documented in this file.
 
 <br />
 
+## [[1.0.7] - 2021-09-13](https://github.com/MarwanAlsoltany/blend/compare/v1.0.6...v1.0.7)
+- Update `TaskRunner` class:
+    * Add new `$results` property.
+    * Add `getExecResult()` method.
+    * Refactor `exec()` method to cache executed commands results.
+    - Fix wrong `addTask()` method call in `makeTask()` method.
+    - Bump package version.
+- Update `TaskRunnerTest` class:
+    - Add `getExecResult()` method test.
+<br />
+
 ## [[1.0.6] - 2021-09-11](https://github.com/MarwanAlsoltany/blend/compare/v1.0.5...v1.0.6)
 - Update `TaskRunner` class:
-    - Add `runTask()` method.
+    - Add `makeTask()` method.
     - Update `runTask()` method.
     - Update `exec()` method.
     - Fix some typos in methods DocBlocks.
