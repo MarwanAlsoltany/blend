@@ -65,11 +65,13 @@ class TaskRunner
 
     /**
      * @var int Task success code.
+     * @since 1.0.2
      */
     public const SUCCESS = 0;
 
     /**
      * @var int Task failure code.
+     * @since 1.0.2
      */
     public const FAILURE = 1;
 
@@ -113,6 +115,7 @@ class TaskRunner
 
     /**
      * @var string Task runner path.
+     * @since 1.0.4
      */
     protected string $path;
 
@@ -157,7 +160,7 @@ class TaskRunner
     protected array $translations;
 
     /**
-     * @var array The currently loaded configuration
+     * @var array The currently loaded configuration.
      */
     protected array $config;
 
@@ -959,6 +962,8 @@ class TaskRunner
      * Note: the same rules of tasks supplied by config file applies to this array.
      *
      * @return $this
+     *
+     * @since 1.0.6
      */
     public function makeTask(array $task)
     {
@@ -972,12 +977,16 @@ class TaskRunner
             'disabled'    => $task['disabled']    ?? false,
         ];
 
-        $handler = $task->executor == static::SHELL_TASK || $task->executor == static::CALLBACK_TASK
+        $func = $task->executor == static::SHELL_TASK || $task->executor == static::CALLBACK_TASK
             ? 'add' . ucfirst(strtolower($task->executor)) . 'Task'
             : 'addTask';
 
+        $args = $func === 'addTask'
+            ? [$task->name, $task->description, $task->executor, $task->executable, $task->arguments]
+            : [$task->name, $task->description, $task->executable, $task->arguments];
+
         $this
-            ->{$handler}($task->name, $task->description, $task->executable, $task->arguments)
+            ->{$func}(...$args)
             ->getTask($task->name)
             ->setHidden($task->hidden)
             ->setDisabled($task->disabled);
