@@ -11,6 +11,7 @@ A versatile and lightweight PHP task runner, designed with simplicity in mind.
 [![License][license-icon]][license-href]
 [![Maintenance][maintenance-icon]][maintenance-href]
 [![Travis Build Status][travis-icon]][travis-href]
+[![codecov][codecov-icon]][codecov-href]
 
 [![Open in Visual Studio Code][vscode-icon]][vscode-href]
 
@@ -93,11 +94,17 @@ This is the recommended way to install Blend. With this installation method, Ble
 Download Blend PHAR archive form the [releases](https://github.com/MarwanAlsoltany/blend/releases) page or using one of the commands down below:
 
 ```sh
-php -r "copy('https://github.com/MarwanAlsoltany/blend/releases/latest/download/blend.phar', 'blend');"
+php -r "copy('https://git.io/JEseO', 'blend');"
 ```
 
 ```sh
-php -r "copy('https://git.io/JEseO', 'blend');"
+php -r "copy('https://github.com/MarwanAlsoltany/blend/releases/latest/download/blend.phar', 'blend');"
+```
+
+Or use the following command to download a specific version (replace `vX.X.X` with the wished version):
+
+```sh
+php -r "copy('https://github.com/MarwanAlsoltany/blend/releases/download/vX.X.X/blend.phar', 'blend');"
 ```
 
 With this installation method, you will get Blend as a portable PHAR archive, you can place it anywhere you want or even include it in your `PATH` for easy access. With this installation method, you have to supply a config file in order to configure/customize Blend. This installation method exists for portability where Blend is not bound to a specific project and a config file is sufficient. Starting from `v1.0.3`, the PHAR installation method is distinguished from other methods with the task `phar:update` that will update your PHAR to the latest release available in this repository.
@@ -107,11 +114,11 @@ With this installation method, you will get Blend as a portable PHAR archive, yo
 Download Blend Setup directly from the [repository](./bin/setup), or using one of the commands down below:
 
 ```sh
-php -r "copy('https://raw.githubusercontent.com/MarwanAlsoltany/blend/master/bin/setup', 'setup');" && php setup
+php -r "copy('https://git.io/JEseR', 'setup');" && php setup
 ```
 
 ```sh
-php -r "copy('https://git.io/JEseR', 'setup');" && php setup
+php -r "copy('https://raw.githubusercontent.com/MarwanAlsoltany/blend/master/bin/setup', 'setup');" && php setup
 ```
 
 Using this method, the Blend executable and source will be installed in the current working directory (to take advantage of IDEs Intellisense when configuring Blend programmatically). With this installation method, you can configure Blend programmatically using the `blend` executable file or by supplying a config file in CWD. This installation method exists merely for legacy projects, where Composer is not an option and programmable config is required.
@@ -340,6 +347,7 @@ Here is the full API of Blend ([`TaskRunner`](./src/TaskRunner.php) class).
 | `$task` | The current task name passed to the task runner. (protected) |
 | `$tasks` | Task runner tasks. (protected) |
 | `$methods` | Magic methods added via `self::extend()`. (protected) |
+| `$results` | The results of commands executed via `self::exec()`. (protected) |
 | `$executables` | The executables that will be loaded. (protected) |
 | `$translations` | The translations that will be applied to tasks names. (protected) |
 | `$config` | The currently loaded configuration. (protected) |
@@ -352,6 +360,7 @@ Here is the full API of Blend ([`TaskRunner`](./src/TaskRunner.php) class).
 |-|-|
 | `extend()` | Extends the class with a magic method using the passed callback. |
 | `exec()` | Executes a shell command synchronously or asynchronous and prints out its result if possible. |
+| `getExecResult()` | Returns the result of a command executed via `self::exec()`. |
 | `addCallbackTask()` | Adds a task that executes the passed callback. |
 | `addShellTask()` | Adds a task that can be executed by the used shell (Bash for example). |
 | `addTask()` | Adds a new task. |
@@ -435,6 +444,7 @@ Copyright (c) 2021 Marwan Al-Soltany. All rights reserved.
 [license-icon]: https://img.shields.io/badge/license-MIT-red.svg?style=flat&logo=github
 [maintenance-icon]: https://img.shields.io/badge/maintained-yes-orange.svg?style=flat&logo=github
 [travis-icon]: https://img.shields.io/travis/com/MarwanAlsoltany/blend/master.svg?style=flat&logo=travis
+[codecov-icon]: https://codecov.io/gh/MarwanAlsoltany/blend/branch/master/graph/badge.svg?token=NWAB1UV4TT
 [vscode-icon]: https://open.vscode.dev/badges/open-in-vscode.svg
 [tweet-icon]: https://img.shields.io/twitter/url/http/shields.io.svg?style=social
 [github-icon]: https://img.shields.io/github/stars/MarwanAlsoltany/blend.svg?style=social&label=Star
@@ -444,7 +454,8 @@ Copyright (c) 2021 Marwan Al-Soltany. All rights reserved.
 [downloads-href]: https://packagist.org/packages/marwanalsoltany/blend/stats
 [license-href]: ./LICENSE
 [maintenance-href]: https://github.com/MarwanAlsoltany/blend/graphs/commit-activity
-[travis-href]: https://travis-ci.com/MarwanAlsoltany/blend
+[travis-href]: https://travis-ci.com/github/MarwanAlsoltany/blend
+[codecov-href]: https://codecov.io/gh/MarwanAlsoltany/blend
 [vscode-href]: https://open.vscode.dev/MarwanAlsoltany/blend
 [tweet-href]: https://twitter.com/intent/tweet?text=A%20versatile%20and%20lightweight%20PHP%20task%20runner%2C%20designed%20with%20simplicity%20in%20mind.%20&hashtags=%23PHP%20%23CLI
 [github-href]: https://GitHub.com/MarwanAlsoltany/blend/stargazers
