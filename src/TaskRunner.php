@@ -26,7 +26,7 @@ class TaskRunner
     /**
      * @var string Package version.
      */
-    public const VERSION = 'v1.0.6';
+    public const VERSION = 'v1.0.7';
 
     /**
      * @var array Default executables.
@@ -150,6 +150,12 @@ class TaskRunner
     protected array $methods;
 
     /**
+     * @var array The results of commands executed via `self::exec()`.
+     * @since 1.0.7
+     */
+    protected array $results;
+
+    /**
      * @var array The executables that will be loaded.
      */
     protected array $executables;
@@ -202,6 +208,7 @@ class TaskRunner
         $this->task         = $this->argv[1] ?? '';
         $this->tasks        = [];
         $this->methods      = [];
+        $this->results      = [];
 
         $this->executables  = $executables  ?? static::EXECUTABLES;
         $this->translations = $translations ?? static::TRANSLATIONS;
@@ -783,6 +790,7 @@ class TaskRunner
      *
      * @return int The status code of the executed command (or PID if asynchronous).
      * Note that if multiple commands are passed only the code/PID of the last one will be returned.
+     * Use `self::getExecResult()` to get all info about the executed command.
      *
      * @throws \InvalidArgumentException If the command is an empty string.
      */
@@ -794,7 +802,7 @@ class TaskRunner
         $code = null;
         $pid  = null;
 
-        foreach ($commands as $command) {
+        foreach ($commands as $index => $command) {
             $command = escapeshellcmd(trim($command));
 
             if (!strlen($command)) {
@@ -804,21 +812,33 @@ class TaskRunner
             $wrapper = $async ? ($windows ? 'start /B %s > NUL' : '/usr/bin/nohup %s > /dev/null 2>&1 & echo $!;') : '%s 2>&1';
             $command = sprintf($wrapper, $command);
 
-            if ($async && $windows) {
-                $descSpec = [0 => ['pipe', 'r'], 1 => ['pipe', 'w'], 2 => ['pipe', 'w']];
-                $process  = proc_open($command, $descSpec, $pipes);
-                $status   = proc_get_status($process);
-                $parentId = $status['pid'] ?? getmypid();
-                $code     = proc_close($process);
+            if ($async) {
+                if ($windows) {
+                    $descSpec = [0 => ['pipe', 'r'], 1 => ['pipe', 'w'], 2 => ['pipe', 'w']];
+                    $process  = proc_open($command, $descSpec, $pipes);
+                    $status   = proc_get_status($process);
+                    $parentId = $status['pid'] ?? getmypid();
+                    $code     = proc_close($process);
 
-                $ids = `wmic process get ParentProcessId,ProcessId | findStr {$parentId}`;
-                $ids = explode(' ', trim($ids ?? ' '));
-                $pid = end($ids);
-
-                continue;
+                    $ids = `wmic process get ParentProcessId,ProcessId | findStr {$parentId}`;
+                    $ids = explode(' ', trim($ids ?? ' '));
+                    $pid = end($ids);
+                } else {
+                    $pid = exec($command, $output, $code);
+                }
+            } else {
+                exec($command, $output, $code);
             }
 
-            $pid = exec($command, $output, $code);
+            $cmd = $commands[$index];
+            $cid = md5(trim($cmd));
+
+            $this->results[$cid] = [
+                'command' => $cmd,
+                'pid'     => $async ? (int)$pid : null,
+                'output'  => $async ? null : implode(PHP_EOL, $output),
+                'code'    => (int)$code,
+            ];
 
             if (!$async) foreach ($output as $line) {
                 $this->write(['%3s @(%s)[{>}] %s'], ['', $code > static::SUCCESS ? 'r' : 'g', $line]);
@@ -826,6 +846,30 @@ class TaskRunner
         }
 
         return $async ? (int)$pid : (int)$code;
+    }
+
+    /**
+     * Returns the result of a command executed via `self::exec()`.
+     *
+     * @param string|null $cmd [optional] The command to get the result of (as was passed to `self::exec()`), or the result of the last command if no parameter is specified.
+     *
+     * @return array|null The result of the command or null if the given command was not executed.
+     * The return value is cached and will be returned from cache if the command was executed before.
+     * The return value is an array with the following keys:
+     * - `command`: (string) The command that was executed.
+     * - `pid`: (int|null) The PID of the executed command or null if the command was executed synchronously. On Windows this will always be `0` if the process is not a long running process.
+     * - `output`: (string|null) The raw output of the executed command or null if the command was executed asynchronously.
+     * - `code`: (int) The status code of the executed command.
+     *
+     * @since 1.0.7
+     */
+    public function getExecResult(?string $cmd = null): ?array
+    {
+        if ($cmd === null) {
+            return end($this->results) ?: null;
+        }
+
+        return $this->results[md5(trim($cmd))] ?? null;
     }
 
     /**
