@@ -4,6 +4,13 @@ All notable changes to **Blend** will be documented in this file.
 
 <br />
 
+## [[1.0.8] - 2021-09-15](https://github.com/MarwanAlsoltany/blend/compare/v1.0.7...v1.0.8)
+- Update `TaskRunner` class:
+    - Add new parameter `$escape` to `exec()` method to control whether command(s) should be escaped or not.
+    - Fix an issue in `checkEnvironment()` method with Windows absolute paths.
+
+<br />
+
 ## [[1.0.7] - 2021-09-13](https://github.com/MarwanAlsoltany/blend/compare/v1.0.6...v1.0.7)
 - Update `TaskRunner` class:
     * Add new `$results` property.
@@ -13,6 +20,7 @@ All notable changes to **Blend** will be documented in this file.
     - Bump package version.
 - Update `TaskRunnerTest` class:
     - Add `getExecResult()` method test.
+
 <br />
 
 ## [[1.0.6] - 2021-09-11](https://github.com/MarwanAlsoltany/blend/compare/v1.0.5...v1.0.6)
