@@ -26,7 +26,7 @@ class TaskRunner
     /**
      * @var string Package version.
      */
-    public const VERSION = 'v1.0.7';
+    public const VERSION = 'v1.0.8';
 
     /**
      * @var array Default executables.
@@ -789,6 +789,7 @@ class TaskRunner
      *
      * @param string|string[] $cmd A string or an array of commands to execute.
      * @param bool $async [optional] Whether the command(s) should be a background process (asynchronous) or not (synchronous).
+     * @param bool $escape [optional] Whether to escape shell meta-characters (like: &#;`|*?~<>^()[]{}$) in the command(s) or not. This parameter is ignored if `$async` is set to `true`.
      *
      * @return int The status code of the executed command (or PID if asynchronous).
      * Note that if multiple commands are passed only the code/PID of the last one will be returned.
@@ -796,7 +797,7 @@ class TaskRunner
      *
      * @throws \InvalidArgumentException If the command is an empty string.
      */
-    public function exec($cmd, bool $async = false): int
+    public function exec($cmd, bool $async = false, bool $escape = true): int
     {
         $commands = (array)$cmd;
         $windows  = PHP_OS === 'WINNT';
@@ -805,13 +806,16 @@ class TaskRunner
         $pid  = null;
 
         foreach ($commands as $index => $command) {
-            $command = escapeshellcmd(trim($command));
+            $command = $async || $escape ? escapeshellcmd(trim($command)) : trim($command);
+            $command = $windows ? preg_replace('`(?<!^) `', '^ ', $command) : $command; // escape spaces on windows
+            $wrapper = $async
+                ? ($windows ? 'start /B %s > NUL' : '/usr/bin/nohup %s > /dev/null 2>&1 & echo $!;')
+                : ($escape ? '%s 2>&1' : '%s');
 
             if (!strlen($command)) {
                 throw new \InvalidArgumentException('No valid command is specified');
             }
 
-            $wrapper = $async ? ($windows ? 'start /B %s > NUL' : '/usr/bin/nohup %s > /dev/null 2>&1 & echo $!;') : '%s 2>&1';
             $command = sprintf($wrapper, $command);
 
             if ($async) {
