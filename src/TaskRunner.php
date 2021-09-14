@@ -322,15 +322,17 @@ class TaskRunner
             throw new \RuntimeException("The '{$this->envVar}' environment variable pattern is invalid, it does not match 'exe:dir,...+...'");
         }
 
-        $envExecutables = [];
-        foreach (explode('+', $env) as $e) {
-            $e = explode(':', $e);
-            $d = explode(',', $e[1] ?? '');
-            $e = $e[0] ?? '';
-            $envExecutables[$e] = $d;
+        $executables = [];
+        foreach (explode('+', $env) ?: [] as $exec) {
+            $exec = explode(':', strtr($exec, [':\\' => '?\\']));
+            $dirs = $exec[1] ?? '';
+            $exec = $exec[0] ?? '';
+            $dirs = explode(',', strtr($dirs, ['?\\' => ':\\']));
+
+            $executables[$exec] = $dirs;
         }
 
-        $this->executables = array_merge_recursive($this->executables, $envExecutables);
+        $this->executables = array_merge_recursive($this->executables, $executables);
     }
 
     /**
