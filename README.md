@@ -208,6 +208,7 @@ Blend will try to load the config from the current working directory, if nothing
 #### A basic Blend executable:
 
 ```php
+#!/usr/bin/env php
 <?php
 
 use MAKS\Blend\TaskRunner as Blend;
@@ -220,6 +221,7 @@ $blend->start();
 #### A more advanced Blend executable:
 
 ```php
+#!/usr/bin/env php
 <?php
 
 use MAKS\Blend\TaskRunner as Blend;
@@ -234,15 +236,17 @@ $blend = new Blend([
     'node' => [
         './js/bin/*.js',
     ],
-]);
+]); // available arguments: $executables, $translations, $config, $ansi, $quiet
 
 $blend->setName('My Task Runner');
 $blend->setVersion('vX.X.X');
 
-// these tasks are for demonstration purposes only
+// NOTE: these tasks are for demonstration purposes only
 
+// adding a shell task
 $blend->addShellTask('ls', 'Lists content of CWD or the passed one.', 'ls', '-lash');
 
+// adding a callback task
 $blend->addCallbackTask('whoami', null, function () {
     /** @var Blend $this */
     $this->say('@task'); // using the @task placeholder to get a string representation of the task object
@@ -250,59 +254,170 @@ $blend->addCallbackTask('whoami', null, function () {
 $blend->disableTask('whoami'); // preventing the task from being ran
 $blend->hideTask('whoami'); // preventing the task from being listed
 
-$blend->addCallbackTask('server:start', 'Starts a PHP Development Server in CWD', function () {
-    /** @var Blend $this */
-    $cwd = getcwd();
+// alternatively, you can use the makeTask() method to pass all arguments at once
+$blend->makeTask([
+    'name'        => 'runner',
+    'description' => null,
+    'executor'    => Blend::CALLBACK_TASK,
+    'executable'  => static function ($runner) {
+        // functions that can't be bound, get the runner as the first argument
+        $runner->say('@runner');
+    },
+    'arguments'   => null,
+    'hidden'      => true,
+    'disabled'    => true,
+]);
 
-    if (file_exists("{$cwd}/.pid.server")) {
-        $this->say('An already started PHP Development Server has been found.');
+// extending the task runner with an additional method
+// NOTE: this implementation is for demonstration purposes only
+$blend->extend('pipe', function (string ...$tasks) {
+    $results = [];
 
-        return Blend::FAILURE;
+    static $previous = null;
+
+    foreach ($tasks as $task) {
+        $current = $this->getTask($task);
+
+        // skip if task does not exist
+        if (!$current) {
+            continue;
+        }
+
+        // pass the result as an argument if the next task is a callback task
+        if ($current->executor === Blend::CALLBACK_TASK) {
+            $current->arguments[] = $previous;
+
+            $previous = $results[$task] = $this->runTask($task);
+
+            continue;
+        }
+
+        // if not a callback task, then it is a shell task (CLI command)
+        // execute the task and cache the result for the next task
+        $this->runTask($task);
+        // with shell tasks, we're interested in the whole result of the task (command)
+        // and not only its exit code, that's why we're using getExecResults() method instead
+        $previous = $results[$task] = $this->getExecResult();
     }
 
-    $pid = $this->exec("php -S localhost:8000 -t {$cwd}", true); // passing true runs the command asynchronously
-    $this->say("Started a PHP Development Server in the background with PID: [{$pid}]");
-
-    file_put_contents("{$cwd}/.pid.server", $pid);
-
-    return Blend::SUCCESS;
+    return $results;
 });
 
-$blend->addCallbackTask('server:stop', 'Stops a started PHP Development Server in CWD', function () {
+// now you can use the newly created method to pipe tasks together
+$blend->addCallbackTask('piped:tasks:run', 'Executes piped tasks.', function () {
     /** @var Blend $this */
-    $cwd = getcwd();
-
-    if (!file_exists("{$cwd}/.pid.server")) {
-        $this->say('No started PHP Development Server has been found.');
-
-        return Blend::FAILURE;
-    }
-
-    $pid = trim(file_get_contents("{$cwd}/.pid.server"));
-
-    $this->exec(PHP_OS === 'WINNT' ? "tskill {$pid}" : "kill -15 {$pid}");
-    $this->say("Stopped PHP Development Server with PID: [{$pid}]");
-
-    unlink("{$cwd}/.pid.server");
-
-    return Blend::SUCCESS;
-});
-
-$blend->addCallbackTask('server:restart', 'Restarts the started PHP Development Server in CWD', function () {
-    /** @var Blend $this */
-    $this->say('Restarting the PHP Development Server');
-
-    $this
-        ->setQuiet(true) // disable output temporarily
-        ->run('server:stop')
-        ->run('server:start')
-        ->setQuiet(false); // enable output again
-
-    // use the runTask() method instead to get the return value of the called task
-    // return $this->runTask('server:stop') & $this->runTask('server:start');
+    $this->say('Running piped tasks ...');
+    $this->pipe(
+        'example:task:1',
+        'example:task:2',
+        'example:task:3'
+        // ...
+    );
+    $this->say('Finished piping!');
 });
 
 $blend->sort();
+$blend->start();
+```
+
+#### A real life example of a Blend executable (PHP Development Server):
+
+```php
+#!/usr/bin/env php
+<?php
+
+use MAKS\Blend\TaskRunner as Blend;
+
+
+$blend = new Blend();
+
+$cwd = getcwd();
+
+$blend->addCallbackTask(
+    'server:start',
+    'Starts a PHP Development Server in CWD',
+    function ($cwd) {
+        /** @var Blend $this */
+        if (file_exists("{$cwd}/.pid.server")) {
+            $this->say('An already started PHP Development Server has been found.');
+
+            return Blend::FAILURE;
+        }
+
+        $pid = $this->exec("php -S localhost:8000 -t {$cwd}", true); // passing true runs the command asynchronously
+        // you can use $this->getExecResult() method to get all additional info about the executed command.
+        $this->say("Started a PHP Development Server in the background with PID: [{$pid}]");
+
+        file_put_contents("{$cwd}/.pid.server", $pid);
+
+        return Blend::SUCCESS;
+    },
+    [$cwd] // passing arguments to tasks callback
+);
+
+$blend->addCallbackTask(
+    'server:stop',
+    'Stops a started PHP Development Server in CWD',
+    function ($cwd) {
+        /** @var Blend $this */
+        if (!file_exists("{$cwd}/.pid.server")) {
+            $this->say('No started PHP Development Server has been found.');
+
+            return Blend::FAILURE;
+        }
+
+        $pid = trim(file_get_contents("{$cwd}/.pid.server"));
+
+        $this->exec(PHP_OS === 'WINNT' ? "tskill {$pid}" : "kill -15 {$pid}");
+        $this->say("Stopped PHP Development Server with PID: [{$pid}]");
+
+        unlink("{$cwd}/.pid.server");
+
+        return Blend::SUCCESS;
+    },
+    [$cwd]
+);
+
+$blend->addCallbackTask(
+    'server:restart',
+    'Restarts the started PHP Development Server in CWD',
+    function () {
+        /** @var Blend $this */
+        $this->say('Restarting the PHP Development Server');
+
+        $this
+            ->setQuiet(true) // disable output temporarily
+            ->run('server:stop')
+            ->run('server:start')
+            ->setQuiet(false); // enable output again
+
+        // use the runTask() method instead to get the return value of the called task
+        // return $this->runTask('server:stop') & $this->runTask('server:start');
+    }
+);
+
+$blend->addCallbackTask(
+    'server:cleanup',
+    'Removes ".pid.server" file from CWD if available',
+    function ($cwd) {
+        /** @var Blend $this */
+        if (file_exists($file = "{$cwd}/.pid.server")) {
+            if (unlink($file)) {
+                $this->say('Removed ".pid.server" file successfully.');
+            } else {
+                $this->say('Failed to remove ".pid.server" file!');
+
+                return Blend::FAILURE;
+            }
+        } else {
+            $this->say('Nothing to clean up!');
+        }
+
+        return Blend::SUCCESS;
+    },
+    [$cwd]
+);
+
 $blend->start();
 ```
 
