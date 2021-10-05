@@ -4,6 +4,14 @@ All notable changes to **Blend** will be documented in this file.
 
 <br />
 
+## [[1.0.9] - 2021-10-06](https://github.com/MarwanAlsoltany/blend/compare/v1.0.8...v1.0.9)
+- Update `blend.php`:
+    - Add a check for `PHAR` extension to make it optional.
+- Update `setup` executable:
+    - Fix wrong setup file path in script log.
+
+<br />
+
 ## [[1.0.8] - 2021-09-15](https://github.com/MarwanAlsoltany/blend/compare/v1.0.7...v1.0.8)
 - Update `TaskRunner` class:
     - Add new parameter `$escape` to `exec()` method to control whether command(s) should be escaped or not.
