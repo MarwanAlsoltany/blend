@@ -133,6 +133,8 @@ if (!file_exists($exeFile)) {
 write("\tDone!", 'G', 2);
 
 
+$setupFile = __FILE__;
+
 write([
     "",
     "You may now delete the setup file\e[0m\e[36m {$setupFile}\e[0m",
