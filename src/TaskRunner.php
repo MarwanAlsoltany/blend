@@ -26,7 +26,7 @@ class TaskRunner
     /**
      * @var string Package version.
      */
-    public const VERSION = 'v1.0.8';
+    public const VERSION = 'v1.0.9';
 
     /**
      * @var array Default executables.
