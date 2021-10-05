@@ -72,7 +72,7 @@ $blend->addCallbackTask(
     }
 );
 
-if (strlen($phar = \Phar::running(false))) {
+if (extension_loaded('phar') && strlen($phar = \Phar::running(false))) {
     $blend->addCallbackTask(
         'phar:update',
         'Updates Blend PHAR to the latest version from remote.',
