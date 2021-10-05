@@ -13,7 +13,7 @@ A versatile and lightweight PHP task runner, designed with simplicity in mind.
 [![Travis Build Status][travis-icon]][travis-href]
 [![codecov][codecov-icon]][codecov-href]
 
-[![Open in Visual Studio Code][vscode-icon]][vscode-href]
+[![Open in Visual Studio Code][vscode-icon]][vscode-href] [![Run on Repl.it][replit-icon]][replit-href]
 
 [![Tweet][tweet-icon]][tweet-href] [![Star][github-icon]][github-href]
 
@@ -36,13 +36,7 @@ A versatile and lightweight PHP task runner, designed with simplicity in mind.
 
 <sup>If you like this project and would like to support its development, giving it a :star: would be appreciated!</sup>
 
-</div>
-
-
----
-
-
-<div align="center">
+<br/>
 
 ![Blend Demo](./blend-demo.gif)
 
@@ -561,6 +555,7 @@ Copyright (c) 2021 Marwan Al-Soltany. All rights reserved.
 [travis-icon]: https://img.shields.io/travis/com/MarwanAlsoltany/blend/master.svg?style=flat&logo=travis
 [codecov-icon]: https://codecov.io/gh/MarwanAlsoltany/blend/branch/master/graph/badge.svg?token=NWAB1UV4TT
 [vscode-icon]: https://open.vscode.dev/badges/open-in-vscode.svg
+[replit-icon]: https://repl.it/badge/github/MarwanAlsoltany/blend
 [tweet-icon]: https://img.shields.io/twitter/url/http/shields.io.svg?style=social
 [github-icon]: https://img.shields.io/github/stars/MarwanAlsoltany/blend.svg?style=social&label=Star
 
@@ -572,5 +567,6 @@ Copyright (c) 2021 Marwan Al-Soltany. All rights reserved.
 [travis-href]: https://travis-ci.com/github/MarwanAlsoltany/blend
 [codecov-href]: https://codecov.io/gh/MarwanAlsoltany/blend
 [vscode-href]: https://open.vscode.dev/MarwanAlsoltany/blend
+[replit-href]: https://replit.com/@marwanalsoltany/blend
 [tweet-href]: https://twitter.com/intent/tweet?text=A%20versatile%20and%20lightweight%20PHP%20task%20runner%2C%20designed%20with%20simplicity%20in%20mind.%20&hashtags=%23PHP%20%23CLI
 [github-href]: https://GitHub.com/MarwanAlsoltany/blend/stargazers
