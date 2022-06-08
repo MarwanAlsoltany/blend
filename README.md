@@ -127,7 +127,9 @@ Blend can be configured using either of the two available config formats:
 
 ![#ff6347](https://via.placeholder.com/11/f03c15/000000?text=+) **Note:** *Refer to [`config/blend.config.php`](./config/blend.config.php) to learn more about the expected data types.*
 
-#### PHP Config `blend.config.php`
+#### PHP Config [`blend.config.php`](./config/blend.config.php):
+
+```php
 
 ```php
 <?php return [
@@ -157,10 +159,11 @@ Blend can be configured using either of the two available config formats:
 ];
 ```
 
-#### JSON Config `blend.config.json` (Recommended)
+#### JSON Config [`blend.config.json`](./config/blend.config.json): (Recommended)
 
-```jsonc
+```json
 {
+    "$schema": "https://raw.githubusercontent.com/MarwanAlsoltany/blend/master/config/schema.json",
     "autoload": null,
     "merge": true,
     "executables": {
@@ -554,8 +557,8 @@ Copyright (c) 2021 Marwan Al-Soltany. All rights reserved.
 [maintenance-icon]: https://img.shields.io/badge/maintained-yes-orange.svg?style=flat&logo=github
 [travis-icon]: https://img.shields.io/travis/com/MarwanAlsoltany/blend/master.svg?style=flat&logo=travis
 [codecov-icon]: https://codecov.io/gh/MarwanAlsoltany/blend/branch/master/graph/badge.svg?token=NWAB1UV4TT
-[vscode-icon]: https://open.vscode.dev/badges/open-in-vscode.svg
-[replit-icon]: https://repl.it/badge/github/MarwanAlsoltany/blend
+[vscode-icon]: https://img.shields.io/static/v1?logo=visualstudiocode&label=&message=Open%20in%20VS%20Code&labelColor=2c2c32&color=007acc&logoColor=007acc
+[replit-icon]: https://img.shields.io/static/v1?logo=replit&label=&message=Run%20on%20Replit&labelColor=0e1525&color=ffffff&logoColor=ffffff
 [tweet-icon]: https://img.shields.io/twitter/url/http/shields.io.svg?style=social
 [github-icon]: https://img.shields.io/github/stars/MarwanAlsoltany/blend.svg?style=social&label=Star
 
