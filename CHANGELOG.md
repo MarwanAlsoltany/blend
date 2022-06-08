@@ -4,6 +4,22 @@ All notable changes to **Blend** will be documented in this file.
 
 <br />
 
+## [[1.0.10] - 2022-06-08](https://github.com/MarwanAlsoltany/blend/compare/v1.0.9...v1.0.10)
+- Add `config/schema.json`.
+- Update `TaskRunner` class:
+    - Add `NAME` class constant.
+    - Update `TRANSLATIONS` class constant.
+    - Update `translate()` method to prevent task names that start with special characters.
+    - Update `load()` method to make prefixing applied only when necessary.
+    - Update `bootstrap()` method validate the loaded config more strictly.
+    - Update Blend views (`displayHelp()`, `displayHint()`, `displayList()`, and `displayExec()` methods).
+- Update `blend.php`:
+    - Add a check for `$schema` field to config files generated via the `config:generate` task.
+- Update `setup` executable:
+    - Make the generated executable use the default `NAME` and `VERSION` of Blend.
+
+<br />
+
 ## [[1.0.9] - 2021-10-06](https://github.com/MarwanAlsoltany/blend/compare/v1.0.8...v1.0.9)
 - Update `blend.php`:
     - Add a check for `PHAR` extension to make it optional.
