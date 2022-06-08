@@ -24,6 +24,12 @@ namespace MAKS\Blend;
 class TaskRunner
 {
     /**
+     * @var string Package name.
+     * @since 1.0.10
+     */
+    public const NAME = 'Blend';
+
+    /**
      * @var string Package version.
      */
     public const VERSION = 'v1.0.9';
@@ -608,12 +614,22 @@ class TaskRunner
     protected function displayHelp(): void
     {
         $this->write(
+            ['', '@(r)[{%s}] Task Runner %s'],
+            [$this->getName(), $this->getVersion()]
+        );
+
+        $this->write(
+            ['', "\e[4mBased on %s %s by \e[1mMarwan Al-Soltany\e[0m", ''],
+            [static::NAME, static::VERSION]
+        );
+
+        $this->write(
+            ['', 'Running as @(b,w)[{ %s }]', ''],
+            [$this->getUser()]
+        );
+
+        $this->write(
             [
-                '',
-                '%s @(r)[{Task Runner}] [%s]',
-                '',
-                'Running as @(b,w)[{ %s }]',
-                '',
                 '',
                 '@(y)[{Usage:}]',
                 '%3s php @(r)[{%s}] @(g)[{<task>}] [options] [--] [arguments]',
@@ -624,7 +640,7 @@ class TaskRunner
                 '',
                 '@(y)[{Tasks:}]',
             ],
-            [$this->getName(), $this->getVersion(), $this->getUser(), '', $this->id, '', $this->id, '', $this->id]
+            ['', $this->id, '', $this->id, '', $this->id]
         );
 
         $this->listTasks($this->tasks);
@@ -640,19 +656,30 @@ class TaskRunner
             ['', '']
         );
 
+        $listExecutables = function ($array) {
+            return implode(' + ', array_map(
+                fn ($executables, $executor) => vsprintf('(%s):["%s"]', [
+                    $executor,
+                    implode('","', $executables)
+                ]),
+                array_values($array),
+                array_keys($array)
+            ));
+        };
+
         $this->write(
             [
                 '',
                 'Use the environment variable @(c)[{%s}] to set one or more directories',
-                'and/or glob patterns to load executables from (default: @(c)[{["%s"]}]).',
+                'and/or glob patterns to load executables from (default: @(c)[{%s}]).',
                 '@(c)[{%s}] pattern: @(m)[{exe}]@(y)[{:}]@(c)[{dir}]@(y)[{,}]@(c)[{...}]@(y)[{+}]...',
                 '@(c)[{%s}] example: @(m)[{php}]@(y)[{:}]@(c)[{bin}]@(y)[{,}]@(c)[{cmd}]@(y)[{+}]@(m)[{node}]@(y)[{:}]@(c)[{bin}]@(y)[{+}]...',
                 '',
                 'If more than one pattern/directory is specified, the tasks will be',
                 'prefixed with the containing directory name to minimize collisions.',
-                'If you want to prevent this behaviour, provide a translation for it.',
+                'To prevent the prefixing behaviour, provide a translation therefor.',
                 '',
-                'Currently loading: @(c)[{["%s"]}]',
+                'Currently loading: @(c)[{%s}]',
                 '',
                 '',
                 '@(b,c)[{ CONFIG }] @(r)[{%s}]',
@@ -660,10 +687,10 @@ class TaskRunner
             ],
             [
                 $this->envVar,
-                implode('", "', array_merge(...array_values(static::EXECUTABLES))),
+                $listExecutables(static::EXECUTABLES),
                 $this->envVar,
                 $this->envVar,
-                implode('", "', array_merge(...array_values($this->executables))),
+                $listExecutables($this->executables),
                 $this->config['__PATH__'] ?? 'N/A'
             ]
         );
@@ -678,6 +705,11 @@ class TaskRunner
      */
     protected function displayHint(): void
     {
+        $this->write(
+            ['', '@(r)[{%s}] Task Runner %s'],
+            [$this->getName(), $this->getVersion()]
+        );
+
         $this->write(
             ['', 'The task with the name @(b,r)[{ %s }] was not found!'],
             [$this->task]
@@ -739,7 +771,12 @@ class TaskRunner
      */
     protected function displayList(): void
     {
-        $this->write(['', '%s @(y)[{Available Tasks:}]'], [$this->name]);
+        $this->write(
+            ['', '@(r)[{%s}] Task Runner %s'],
+            [$this->getName(), $this->getVersion()]
+        );
+
+        $this->write(['', '@(y)[{Available Tasks:}]']);
 
         $this->listTasks($this->tasks);
 
@@ -755,6 +792,11 @@ class TaskRunner
      */
     protected function displayExec(): void
     {
+        $this->write(
+            ['', '@(r)[{%s}] Task Runner %s'],
+            [$this->getName(), $this->getVersion()]
+        );
+
         $command = implode(' ', $this->args);
 
         $this->write(
