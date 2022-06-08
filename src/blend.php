@@ -36,6 +36,7 @@ $blend->addCallbackTask(
         }
 
         $example = [
+            '$schema'      => 'https://raw.githubusercontent.com/MarwanAlsoltany/blend/master/config/schema.json',
             'autoload'     => null,
             'merge'        => true,
             'executables'  => [
