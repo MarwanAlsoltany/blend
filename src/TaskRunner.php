@@ -24,18 +24,25 @@ namespace MAKS\Blend;
 class TaskRunner
 {
     /**
-     * @var string Package name.
+     * Package name.
+     *
+     * @var string
+     *
      * @since 1.0.10
      */
     public const NAME = 'Blend';
 
     /**
-     * @var string Package version.
+     * Package version.
+     *
+     * @var string
      */
     public const VERSION = 'v1.0.9';
 
     /**
-     * @var array Default executables.
+     * Default executables.
+     *
+     * @var array
      */
     public const EXECUTABLES = [
         'php' => [
@@ -44,7 +51,9 @@ class TaskRunner
     ];
 
     /**
-     * @var array Default task name translations.
+     * Default task name translations.
+     *
+     * @var array
      */
     public const TRANSLATIONS = [
         // file extensions with dots, come first to minimize unexpected name translations
@@ -57,7 +66,9 @@ class TaskRunner
     ];
 
     /**
-     * @var array Default config.
+     * Default config.
+     *
+     * @var array
      */
     public const CONFIG = [
         'autoload'     => null, // (string|null)
@@ -70,119 +81,166 @@ class TaskRunner
     ];
 
     /**
-     * @var int Task success code.
+     * Task success code.
+     *
+     * @var int
+     *
      * @since 1.0.2
      */
     public const SUCCESS = 0;
 
     /**
-     * @var int Task failure code.
+     * Task failure code.
+     *
+     * @var int
+     *
      * @since 1.0.2
      */
     public const FAILURE = 1;
 
     /**
-     * @var string Task type callback.
+     * Task type callback.
+     *
+     * @var string
      */
     public const CALLBACK_TASK = 'callback';
 
     /**
-     * @var string Task type shell.
+     * Task type shell.
+     *
+     * @var string
      */
     public const SHELL_TASK = 'shell';
 
     /**
-     * @var string Task type internal.
+     * Task type internal.
+     *
+     * @var string
      */
     protected const INTERNAL_TASK = 'internal';
 
 
     /**
-     * @var int A reference to the `$argc` global variable.
+     * A reference to the `$argc` global variable.
+     *
+     * @var int
      */
     public int $argc;
 
     /**
-     * @var array 	A reference to the `$argv` global variable.
+     * 	A reference to the `$argv` global variable.
+     *
+     * @var array
      */
     public array $argv;
 
     /**
-     * @var array An array of the arguments that could be passed to the executed task.
+     * An array of the arguments that could be passed to the executed task.
+     *
+     * @var array
      */
     public array $args;
 
 
     /**
-     * @var string Environment variable.
+     * Environment variable.
+     *
+     * @var string
      */
     private string $envVar;
 
 
     /**
-     * @var string Task runner path.
+     * Task runner path.
+     *
+     * @var string
      * @since 1.0.4
      */
     protected string $path;
 
     /**
-     * @var string Task runner ID.
+     * Task runner ID.
+     *
+     * @var string
      */
     protected string $id;
 
     /**
-     * @var string Task runner name.
+     * Task runner name.
+     *
+     * @var string
      */
     protected string $name;
 
     /**
-     * @var string Task runner version.
+     * Task runner version.
+     *
+     * @var string
      */
     protected string $version;
 
     /**
-     * @var string The current task name passed to the task runner.
+     * The current task name passed to the task runner.
+     *
+     * @var string
      */
     protected string $task;
 
     /**
-     * @var array Task runner tasks.
+     * Task runner tasks.
+     *
+     * @var array
      */
     protected array $tasks;
 
     /**
-     * @var array Magic methods added via `self::extend()`.
+     * Magic methods added via `self::extend()`.
+     *
+     * @var array
      */
     protected array $methods;
 
     /**
-     * @var array The results of commands executed via `self::exec()`.
+     * The results of commands executed via `self::exec()`.
+     *
+     * @var array
+     *
      * @since 1.0.7
      */
     protected array $results;
 
     /**
-     * @var array The executables that will be loaded.
+     * The executables that will be loaded.
+     *
+     * @var array
      */
     protected array $executables;
 
     /**
-     * @var array The translations that will be applied to tasks names.
+     * The translations that will be applied to tasks names.
+     *
+     * @var array
      */
     protected array $translations;
 
     /**
-     * @var array The currently loaded configuration.
+     * The currently loaded configuration.
+     *
+     * @var array
      */
     protected array $config;
 
     /**
-     * @var bool Whether or not to turn on ANSI colors for the output.
+     * Whether or not to turn on ANSI colors for the output.
+     *
+     * @var bool
      */
     protected bool $ansi;
 
     /**
-     * @var bool Whether or not to turn on the output.
+     * Whether or not to turn on the output.
+     *
+     * @var bool
      */
     protected bool $quiet;
 
