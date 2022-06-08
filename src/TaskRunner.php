@@ -43,11 +43,11 @@ class TaskRunner
     public const TRANSLATIONS = [
         // file extensions with dots, come first to minimize unexpected name translations
         '.php' => '', '.phar' => '', '.sh' => '',
-        ' ' => ':', '-' => ':', '_' => ':',
+        ' ' => ':', '-' => ':', '_' => ':', '/' => ':', '\\' => ':',
         '~' => '', '!' => '', '@' => '', '#' => '', '$' => '', '&' => '', '%' => '',
         '(' => '', ')' => '', '{' => '', '}' => '', '[' => '', ']' => '',
         '+' => '', '=' => '', '^' => '', '.' => '',
-        ';' => '', ',' => '', '`' => '', '\''=> '',
+        ';' => '', ',' => '', '`' => '', '\'' => '',
     ];
 
     /**
@@ -497,11 +497,15 @@ class TaskRunner
      * @param string $string The string to translate.
      * @param array|null $translations The translations to use. If null is passed, class translations will be used instead.
      *
-     * @return string The translated string.
+     * @return string The translated string. Note that the returned string will always be trimmed from non-alphanumeric characters.
      */
     protected function translate(string $string, ?array $translations = null): string
     {
-        return strtolower(strtr(trim($string), $translations ?? $this->translations));
+        return preg_replace(
+            ['/^[^[:alnum:]]/', '/[^[:alnum:]]$/'],
+            ['', ''],
+            strtolower(strtr(trim($string), $translations ?? $this->translations))
+        );
     }
 
     /**
