@@ -401,16 +401,27 @@ class TaskRunner
         $this->addTask('list', 'Lists available tasks', static::INTERNAL_TASK, sprintf('php %s list', $this->id));
         $this->addTask('exec', 'Executes CLI commands', static::INTERNAL_TASK, sprintf('php %s exec', $this->id));
 
-        $this->executables  = array_merge_recursive(($this->config['merge'] ?? true) ? $this->executables : [], (array)$this->config['executables']);
-        $this->translations = array_merge(($this->config['merge'] ?? true) ? $this->translations : [], (array)$this->config['translations']);
-        $this->ansi         = $this->config['ansi'] ?? $this->ansi;
-        $this->quiet        = $this->config['quiet'] ?? $this->quiet;
+        $config = (object)[
+            'autoload'     => (string)($this->config['autoload'] ?? null),
+            'merge'        => (bool)($this->config['merge'] ?? true),
+            'executables'  => (array)($this->config['executables'] ?? null),
+            'translations' => (array)($this->config['translations'] ?? null),
+            'ansi'         => (bool)($this->config['ansi'] ?? $this->ansi),
+            'quiet'        => (bool)($this->config['quiet'] ?? $this->quiet),
+            'tasks'        => (array)($this->config['tasks'] ?? null),
+        ];
 
-        if ($this->config['autoload'] ?? null) {
-            require $this->config['autoload'];
+        $this->executables  = array_merge_recursive($config->merge ? $this->executables : [], $config->executables);
+        $this->executables  = array_map(fn ($executable) => array_filter(array_unique($executable)), $this->executables);
+        $this->translations = array_merge($config->merge ? $this->translations : [], $config->translations);
+        $this->ansi         = $config->ansi;
+        $this->quiet        = $config->quiet;
+
+        if (!empty($config->autoload)) {
+            require $config->autoload;
         }
 
-        foreach ((array)$this->config['tasks'] as $name => $task) {
+        foreach ($config->tasks as $name => $task) {
             $task['name'] = $task['name'] ?? (string)$name;
 
             $this->makeTask($task);
