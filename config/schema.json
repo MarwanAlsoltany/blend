@@ -1,0 +1,103 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "required": [
+        "autoload",
+        "merge",
+        "executables",
+        "translations",
+        "ansi",
+        "quiet",
+        "tasks"
+    ],
+    "properties": {
+        "autoload": {
+            "type": [
+                "string",
+                "null"
+            ]
+        },
+        "merge": {
+            "type": "boolean"
+        },
+        "executables": {
+            "type": "object",
+            "required": [],
+            "properties": {
+                "executor": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "translations": {
+            "type": "object",
+            "required": [],
+            "properties": {
+                "from": {
+                    "type": "string"
+                }
+            }
+        },
+        "ansi": {
+            "type": "boolean"
+        },
+        "quiet": {
+            "type": "boolean"
+        },
+        "tasks": {
+            "type": "object",
+            "required": [],
+            "properties": {
+                "some:task": {
+                    "type": "object",
+                    "required": [
+                        "executor",
+                        "executable"
+                    ],
+                    "properties": {
+                        "name": {
+                            "type": [
+                                "string",
+                                "null"
+                            ]
+                        },
+                        "description": {
+                            "type": [
+                                "string",
+                                "null"
+                            ]
+                        },
+                        "executor": {
+                            "type": "string",
+                            "enum": [
+                                "shell",
+                                "callback"
+                            ]
+                        },
+                        "executable": {
+                            "type": [
+                                "string",
+                                "object"
+                            ]
+                        },
+                        "arguments": {
+                            "type": [
+                                "string",
+                                "null"
+                            ]
+                        },
+                        "hidden": {
+                            "type": "boolean"
+                        },
+                        "disabled": {
+                            "type": "boolean"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
