@@ -41,8 +41,8 @@ use MAKS\Blend\TaskRunner as Blend;
     ],
 ]);
 
-\$blend->setName('Blend');
-\$blend->setVersion('v0.0.0');
+\$blend->setName(Blend::NAME);
+\$blend->setVersion(Blend::VERSION);
 
 // these tasks are only for demonstration purposes
 // you can freely delete/edit them to your needs
