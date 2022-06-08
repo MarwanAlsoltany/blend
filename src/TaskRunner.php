@@ -451,6 +451,8 @@ class TaskRunner
      */
     protected function load(array $executables): ?array
     {
+        static $prefixes = [];
+
         $tasks = null;
 
         foreach ($executables as $executor => $directories) {
@@ -463,21 +465,25 @@ class TaskRunner
                     $directory = rtrim($directory, '/') . '/*';
                 }
 
-                $prefix = count($directories) > 1 ? basename(dirname($directory)) : '';
+                $prefix = isset($prefixes['']) ? dirname($directory) : '';
                 $files  = glob($directory) ?: [];
 
-                foreach ($files as $executable) {
-                    if (is_file($executable)) {
-                        $name = trim(sprintf('%s-%s', $prefix, basename($executable)), '-');
+                $prefixes[$prefix] = sprintf('[%s@%s]:%s', $executor, $directory, $prefix);
 
-                        $tasks[$name] = [
-                            'name'        => $name,
-                            'description' => null,
-                            'executor'    => $executor,
-                            'executable'  => $executable,
-                            'arguments'   => null,
-                        ];
+                foreach ($files as $executable) {
+                    if (!is_file($executable)) {
+                        continue;
                     }
+
+                    $name = trim(sprintf('%s-%s', $prefix, basename($executable)), '-');
+
+                    $tasks[$name] = [
+                        'name'        => $name,
+                        'description' => null,
+                        'executor'    => $executor,
+                        'executable'  => $executable,
+                        'arguments'   => null,
+                    ];
                 }
             }
         }
