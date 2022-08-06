@@ -7,7 +7,8 @@ A versatile and lightweight PHP task runner, designed with simplicity in mind.
 
 [![PHP Version][php-icon]][php-href]
 [![Latest Version on Packagist][version-icon]][version-href]
-[![Total Downloads][downloads-icon]][downloads-href]
+[![Packagist Downloads][downloads-icon]][downloads-href]
+[![GitHub Downloads][github-downloads-icon]][github-downloads-href]
 [![License][license-icon]][license-href]
 [![Maintenance][maintenance-icon]][maintenance-href]
 [![Travis Build Status][travis-icon]][travis-href]
@@ -125,7 +126,7 @@ Using this method, the Blend executable and source will be installed in the curr
 
 Blend can be configured using either of the two available config formats:
 
-![#ff6347](https://via.placeholder.com/11/f03c15/000000?text=+) **Note:** *Refer to [`config/blend.config.php`](./config/blend.config.php) to learn more about the expected data types.*
+![■](https://user-images.githubusercontent.com/7969982/182090864-09a2573a-59e3-4c82-bf9f-e2b9cd360c27.png) **Note:** *Refer to [`config/blend.config.php`](./config/blend.config.php) to learn more about the expected data types.*
 
 #### PHP Config [`blend.config.php`](./config/blend.config.php):
 
@@ -194,7 +195,7 @@ Blend can be configured using either of the two available config formats:
 
 Blend will try to load the config from the current working directory, if nothing is to be found there, it will go one level upwards and look in the parent directory and so on until it reaches the root directory. if it does not find anything there either, Blend will start without config.
 
-![#1e90ff](https://via.placeholder.com/11/1e90ff/000000?text=+) **Fact:** *Although JSON config format is recommended, PHP config has precedence. This means, if the two config formats are to be found in the same directory, the PHP config will get loaded instead of the JSON one. This is merely because the PHP config can be executed and is, therefore, more powerful.*
+![■](https://user-images.githubusercontent.com/7969982/182090858-f98dc83e-da1c-4f14-a538-8ac0a9bc43c3.png) **Fact:** *Although JSON config format is recommended, PHP config has precedence. This means, if the two config formats are to be found in the same directory, the PHP config will get loaded instead of the JSON one. This is merely because the PHP config can be executed and is, therefore, more powerful.*
 
 
 ---
@@ -418,9 +419,9 @@ $blend->addCallbackTask(
 $blend->start();
 ```
 
-![#ff6347](https://via.placeholder.com/11/f03c15/000000?text=+) **Note:** *Blend gets its ID from the executable name that contains it (`$argv[0]`). So if you were to rename the file that contains it to something else, all Blend output will reflect this new change (help message, suggestions, etc...). The environment variable and the config file name will also be expected to match the new name.*
+![■](https://user-images.githubusercontent.com/7969982/182090864-09a2573a-59e3-4c82-bf9f-e2b9cd360c27.png) **Note:** *Blend gets its ID from the executable name that contains it (`$argv[0]`). So if you were to rename the file that contains it to something else, all Blend output will reflect this new change (help message, suggestions, etc...). The environment variable and the config file name will also be expected to match the new name.*
 
-![#32cd32](https://via.placeholder.com/11/32cd32/000000?text=+) **Advice:** *The [`TaskRunner`](./src/TaskRunner.php) class is well documented, if you have any questions about Blend API, refer to the DocBlocks of its methods, you will probably find your answer there.*
+![■](https://user-images.githubusercontent.com/7969982/182090863-c6bf7159-7056-4a00-bc97-10a5d296c797.png) **Hint:** *The [`TaskRunner`](./src/TaskRunner.php) class is well documented, if you have any questions about Blend API, refer to the DocBlocks of its methods, you will probably find your answer there.*
 
 
 ---
@@ -429,6 +430,8 @@ $blend->start();
 ## API
 
 Here is the full API of Blend ([`TaskRunner`](./src/TaskRunner.php) class).
+
+![■](https://user-images.githubusercontent.com/7969982/182090864-09a2573a-59e3-4c82-bf9f-e2b9cd360c27.png) **Note:** *The full API of the `TaskRunner::class` —including private and protected members— is listed here as you mostly want to extend Blend by using the `TaskRunner::extend()` method which has access to the private scope.*
 
 #### Constants
 
@@ -471,6 +474,7 @@ Here is the full API of Blend ([`TaskRunner`](./src/TaskRunner.php) class).
 | Method | Description |
 |-|-|
 | `extend()` | Extends the class with a magic method using the passed callback. |
+| `passthru()` | Executes a shell command using `passthru()`. |
 | `exec()` | Executes a shell command synchronously or asynchronous and prints out its result if possible. |
 | `getExecResult()` | Returns the result of a command executed via `self::exec()`. |
 | `addCallbackTask()` | Adds a task that executes the passed callback. |
@@ -553,6 +557,7 @@ Copyright (c) 2021 Marwan Al-Soltany. All rights reserved.
 [php-icon]: https://img.shields.io/badge/php-%3D%3C7.4-yellow?style=flat&logo=php
 [version-icon]: https://img.shields.io/packagist/v/marwanalsoltany/blend.svg?style=flat&logo=packagist
 [downloads-icon]: https://img.shields.io/packagist/dt/marwanalsoltany/blend.svg?style=flat&logo=packagist
+[github-downloads-icon]: https://img.shields.io/github/downloads/MarwanAlsoltany/blend/total?logo=github&label=downloads
 [license-icon]: https://img.shields.io/badge/license-MIT-red.svg?style=flat&logo=github
 [maintenance-icon]: https://img.shields.io/badge/maintained-yes-orange.svg?style=flat&logo=github
 [travis-icon]: https://img.shields.io/travis/com/MarwanAlsoltany/blend/master.svg?style=flat&logo=travis
@@ -565,6 +570,7 @@ Copyright (c) 2021 Marwan Al-Soltany. All rights reserved.
 [php-href]: https://github.com/MarwanAlsoltany/blend/search?l=php
 [version-href]: https://packagist.org/packages/marwanalsoltany/blend
 [downloads-href]: https://packagist.org/packages/marwanalsoltany/blend/stats
+[github-downloads-href]: https://github.com/MarwanAlsoltany/blend/releases
 [license-href]: ./LICENSE
 [maintenance-href]: https://github.com/MarwanAlsoltany/blend/graphs/commit-activity
 [travis-href]: https://travis-ci.com/github/MarwanAlsoltany/blend
