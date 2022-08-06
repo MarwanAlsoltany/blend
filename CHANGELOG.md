@@ -4,6 +4,20 @@ All notable changes to **Blend** will be documented in this file.
 
 <br />
 
+## [[1.0.11] - 2022-08-06](https://github.com/MarwanAlsoltany/blend/compare/v1.0.10...v1.0.11)
+- Update `TaskRunner` class:
+    - Add `passthru()` method.
+    - Update the following methods to unify Blend output:
+        - `displayHelp()`.
+        - `displayHint()`.
+        - `displayList()`.
+        - `displayExec()`.
+        - `run()`.
+- Update `TaskRunnerTest` class:
+    - Add `passthru()` method test.
+
+<br />
+
 ## [[1.0.10] - 2022-06-08](https://github.com/MarwanAlsoltany/blend/compare/v1.0.9...v1.0.10)
 - Add `config/schema.json`.
 - Update `TaskRunner` class:
