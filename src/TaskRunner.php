@@ -886,6 +886,54 @@ class TaskRunner
     }
 
     /**
+     * Executes a shell command using `passthru()`.
+     * This is useful for interactive commands and/or long running processes with output.
+     *
+     * @param string|string[] $cmd A string or an array of commands to execute.
+     * @param bool $escape [optional] Whether to escape shell meta-characters (like: &#;`|*?~<>^()[]{}$) in the command(s) or not.
+     *
+     * @return int The status code of the executed command.
+     * Note that if multiple commands are passed only the code of the last one will be returned.
+     * Use `self::getExecResult()` to get all info about the executed command.
+     *
+     * @throws \InvalidArgumentException If the command is an empty string.
+     *
+     * @since 1.0.11
+     */
+    public function passthru($cmd, bool $escape = true): int
+    {
+        $commands = (array)$cmd;
+        $windows  = PHP_OS === 'WINNT';
+
+        $code = null;
+
+        foreach ($commands as $index => $command) {
+            $command = $escape ? escapeshellcmd(trim($command)) : trim($command);
+            $command = $windows ? preg_replace('`(?<!^) `', '^ ', $command) : $command; // escape spaces on windows
+
+            if (!strlen($command)) {
+                throw new \InvalidArgumentException('No valid command is specified');
+            }
+
+            fwrite(STDOUT, PHP_EOL);
+            passthru($command, $code);
+            fwrite($code ? STDERR : STDOUT, PHP_EOL);
+
+            $cmd = $commands[$index];
+            $cid = md5(trim($cmd));
+
+            $this->results[$cid] = [
+                'command' => $cmd,
+                'pid'     => null,
+                'output'  => null,
+                'code'    => (int)$code,
+            ];
+        }
+
+        return (int)$code;
+    }
+
+    /**
      * Executes a shell command synchronously or asynchronous and prints out its result if possible.
      *
      * @param string|string[] $cmd A string or an array of commands to execute.
