@@ -138,7 +138,12 @@ class TaskRunnerTest extends TestCase
         $this->expectException(\Exception::class);
         $this->expectExceptionMessageMatches('/(A directory path or a glob pattern was expected, got a path to a file)/');
 
-        $runner = new TaskRunnerMock(['php' => [__FILE__]]);
+        $runner = new TaskRunnerMock([
+            'php' => [
+                dirname(__DIR__), // cover not loading directories after path lookup
+                __FILE__
+            ]
+        ]);
     }
 
     public function testExecMethodExecutesACommandAndPrintsItsOutput()
@@ -172,6 +177,30 @@ class TaskRunnerTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
 
         $this->runner->exec(['', '']);
+    }
+
+    public function testPassthruMethodExecutesACommandAndPassesTheOutputThru()
+    {
+        $cmd = 'php -v';
+        $pid = $this->runner->exec($cmd, true);
+
+        $this->assertIsInt($pid);
+
+        ob_start();
+        $code = $this->runner->passthru($cmd);
+        $output = ob_get_clean();
+
+        $this->assertIsInt($code);
+        $this->assertEquals(0, $code);
+        $this->assertStringContainsString('PHP', $output);
+        $this->assertStringContainsString('Zend Engine', $output);
+    }
+
+    public function testPassthruMethodFailsIfTheCommandIsInvalid()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        $this->runner->passthru(['', '']);
     }
 
     public function testGetExecResultMethodReturnsTheResultOfAnExecutedCommand()
