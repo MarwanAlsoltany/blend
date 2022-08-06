@@ -743,7 +743,7 @@ class TaskRunner
                 $listExecutables(static::EXECUTABLES),
                 $this->envVar,
                 $this->envVar,
-                $listExecutables($this->executables),
+                $listExecutables($this->executables) ?: 'NONE',
                 $this->config['__PATH__'] ?? 'N/A'
             ]
         );
