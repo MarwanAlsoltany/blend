@@ -672,11 +672,6 @@ class TaskRunner
     protected function displayHelp(): void
     {
         $this->write(
-            ['', '@(r)[{%s}] Task Runner %s'],
-            [$this->getName(), $this->getVersion()]
-        );
-
-        $this->write(
             ['', "\e[4mBased on %s %s by \e[1mMarwan Al-Soltany\e[0m", ''],
             [static::NAME, static::VERSION]
         );
@@ -764,11 +759,6 @@ class TaskRunner
     protected function displayHint(): void
     {
         $this->write(
-            ['', '@(r)[{%s}] Task Runner %s'],
-            [$this->getName(), $this->getVersion()]
-        );
-
-        $this->write(
             ['', 'The task with the name @(b,r)[{ %s }] was not found!'],
             [$this->task]
         );
@@ -807,13 +797,13 @@ class TaskRunner
                 continue;
             }
 
-            $altTasks[] = $this->format('php @(r)[{%s}] @(g)[{%s}]', $this->id, $task->name);
+            $altTasks[] = $this->format('    @(blue)[{->}] php @(r)[{%s}] @(g)[{%s}]', $this->id, $task->name);
         }
 
         if (!empty($altTasks)) {
             $this->write(
-                ['', '@(blue)[{Run the following instead:}] [%s]'],
-                [implode('] @(blue)[{or}] [', $altTasks)]
+                ['', '@(blue)[{Run the following instead:}]', '%s'],
+                [implode(PHP_EOL, $altTasks)]
             );
         }
 
@@ -829,11 +819,6 @@ class TaskRunner
      */
     protected function displayList(): void
     {
-        $this->write(
-            ['', '@(r)[{%s}] Task Runner %s'],
-            [$this->getName(), $this->getVersion()]
-        );
-
         $this->write(['', '@(y)[{Available Tasks:}]']);
 
         $this->listTasks($this->tasks);
@@ -850,11 +835,6 @@ class TaskRunner
      */
     protected function displayExec(): void
     {
-        $this->write(
-            ['', '@(r)[{%s}] Task Runner %s'],
-            [$this->getName(), $this->getVersion()]
-        );
-
         $command = implode(' ', $this->args);
 
         $this->write(
@@ -1316,6 +1296,11 @@ class TaskRunner
      */
     public function run(?string $task = null)
     {
+        $this->write(
+            ['', '@(r)[{%s}] Task Runner %s'],
+            [$this->getName(), $this->getVersion()]
+        );
+
         $chainable = $task !== null;
         $task      = $this->task = (string)($task ?? $this->task);
         $available = $this->getTask($task);
