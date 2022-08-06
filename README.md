@@ -132,7 +132,6 @@ Blend can be configured using either of the two available config formats:
 
 ```php
 
-```php
 <?php return [
     'autoload' => null,
     'merge' => true,
@@ -158,11 +157,13 @@ Blend can be configured using either of the two available config formats:
         ],
     ],
 ];
+
 ```
 
 #### JSON Config [`blend.config.json`](./config/blend.config.json): (Recommended)
 
 ```json
+
 {
     "$schema": "https://raw.githubusercontent.com/MarwanAlsoltany/blend/master/config/schema.json",
     "autoload": null,
@@ -189,6 +190,7 @@ Blend can be configured using either of the two available config formats:
         }
     }
 }
+
 ```
 
 #### How Does Config Loading Work?
@@ -206,6 +208,7 @@ Blend will try to load the config from the current working directory, if nothing
 #### A basic Blend executable:
 
 ```php
+
 #!/usr/bin/env php
 <?php
 
@@ -316,11 +319,13 @@ $blend->addCallbackTask('piped:tasks:run', 'Executes piped tasks.', function () 
 
 $blend->sort();
 $blend->start();
+
 ```
 
 #### A real life example of a Blend executable (PHP Development Server):
 
 ```php
+
 #!/usr/bin/env php
 <?php
 
@@ -417,6 +422,7 @@ $blend->addCallbackTask(
 );
 
 $blend->start();
+
 ```
 
 ![■](https://user-images.githubusercontent.com/7969982/182090864-09a2573a-59e3-4c82-bf9f-e2b9cd360c27.png) **Note:** *Blend gets its ID from the executable name that contains it (`$argv[0]`). So if you were to rename the file that contains it to something else, all Blend output will reflect this new change (help message, suggestions, etc...). The environment variable and the config file name will also be expected to match the new name.*
