@@ -461,10 +461,6 @@ class TaskRunner
      */
     protected function bootstrap(): void
     {
-        $this->addTask('help', 'Displays help message', static::INTERNAL_TASK, sprintf('php %s help', $this->id));
-        $this->addTask('list', 'Lists available tasks', static::INTERNAL_TASK, sprintf('php %s list', $this->id));
-        $this->addTask('exec', 'Executes CLI commands', static::INTERNAL_TASK, sprintf('php %s exec', $this->id));
-
         $config = (object)[
             'autoload'     => (string)($this->config['autoload'] ?? null),
             'merge'        => (bool)($this->config['merge'] ?? true),
@@ -477,9 +473,17 @@ class TaskRunner
 
         $this->executables  = array_merge_recursive($config->merge ? $this->executables : [], $config->executables);
         $this->executables  = array_map(fn ($executable) => array_filter(array_unique($executable)), $this->executables);
+        // remove duplicated keys of the translations array if the arrays gonna merge, so that overrides get added to the end of the stack
+        $this->translations = array_diff_key($this->translations, $config->merge ? $config->translations : []);
         $this->translations = array_merge($config->merge ? $this->translations : [], $config->translations);
+
         $this->ansi         = $config->ansi;
         $this->quiet        = $config->quiet;
+
+        // all tasks get added after the config is fully loaded and merged
+        $this->addTask('help', 'Displays help message', static::INTERNAL_TASK, sprintf('php %s help', $this->id));
+        $this->addTask('list', 'Lists available tasks', static::INTERNAL_TASK, sprintf('php %s list', $this->id));
+        $this->addTask('exec', 'Executes CLI commands', static::INTERNAL_TASK, sprintf('php %s exec', $this->id));
 
         if (!empty($config->autoload)) {
             require $config->autoload;
