@@ -4,6 +4,16 @@ All notable changes to **Blend** will be documented in this file.
 
 <br />
 
+## [[1.1.0] - 2022-09-20](https://github.com/MarwanAlsoltany/blend/compare/v1.0.11...v1.1.0)
+- Update `TaskRunner` class:
+    - Update `translate()` method to support regex translations.
+- Update `TaskRunner` class:
+    - Update `bootstrap()` method to load tasks at the same time.
+- Update `blend.php`
+    - Rename `phar:update` task to `update`.
+
+<br />
+
 ## [[1.0.11] - 2022-08-06](https://github.com/MarwanAlsoltany/blend/compare/v1.0.10...v1.0.11)
 - Update `TaskRunner` class:
     - Add `passthru()` method.
