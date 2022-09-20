@@ -102,7 +102,7 @@ Or use the following command to download a specific version (replace `vX.X.X` wi
 php -r "copy('https://github.com/MarwanAlsoltany/blend/releases/download/vX.X.X/blend.phar', 'blend');"
 ```
 
-With this installation method, you will get Blend as a portable PHAR archive, you can place it anywhere you want or even include it in your `PATH` for easy access. With this installation method, you have to supply a config file in order to configure/customize Blend. This installation method exists for portability where Blend is not bound to a specific project and a config file is sufficient. Starting from `v1.0.3`, the PHAR installation method is distinguished from other methods with the task `phar:update` that will update your PHAR to the latest release available in this repository.
+With this installation method, you will get Blend as a portable PHAR archive, you can place it anywhere you want or even include it in your `PATH` for easy access. With this installation method, you have to supply a config file in order to configure/customize Blend. This installation method exists for portability where Blend is not bound to a specific project and a config file is sufficient. Starting from `v1.0.3`, the PHAR installation method is distinguished from other methods with the task `update` (used to be called ~~`phar:update`~~ before `v1.1.0`) that will update your PHAR to the latest release available in this repository.
 
 #### Using Installer:
 
@@ -125,8 +125,6 @@ Using this method, the Blend executable and source will be installed in the curr
 ## Config
 
 Blend can be configured using either of the two available config formats:
-
-![■](https://user-images.githubusercontent.com/7969982/182090864-09a2573a-59e3-4c82-bf9f-e2b9cd360c27.png) **Note:** *Refer to [`config/blend.config.php`](./config/blend.config.php) to learn more about the expected data types.*
 
 #### PHP Config [`blend.config.php`](./config/blend.config.php):
 
@@ -193,9 +191,11 @@ Blend can be configured using either of the two available config formats:
 
 ```
 
+![■](https://user-images.githubusercontent.com/7969982/182090864-09a2573a-59e3-4c82-bf9f-e2b9cd360c27.png) **Note:** *Refer to [`config/blend.config.php`](./config/blend.config.php) and [`config/schema.json`](./config/schema.json) to learn more about the expected data types. Note that JSON config has some limitations (callback tasks for example) so check out to both files.*
+
 #### How Does Config Loading Work?
 
-Blend will try to load the config from the current working directory, if nothing is to be found there, it will go one level upwards and look in the parent directory and so on until it reaches the root directory. if it does not find anything there either, Blend will start without config.
+Blend will try to load the config from the current working directory, if nothing is to be found there, it will go one level upwards and look in the parent directory and so on until it reaches the root directory, if it does not find anything there either, Blend will start without config.
 
 ![■](https://user-images.githubusercontent.com/7969982/182090858-f98dc83e-da1c-4f14-a538-8ac0a9bc43c3.png) **Fact:** *Although JSON config format is recommended, PHP config has precedence. This means, if the two config formats are to be found in the same directory, the PHP config will get loaded instead of the JSON one. This is merely because the PHP config can be executed and is, therefore, more powerful.*
 
