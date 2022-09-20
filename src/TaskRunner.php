@@ -565,10 +565,35 @@ class TaskRunner
      */
     protected function translate(string $string, ?array $translations = null): string
     {
+        $translations = $translations ?? $this->translations;
+        $set          = md5(serialize($translations));
+
+        static $patterns = [];
+
+        if (!isset($patterns[$set])) {
+            $patterns[$set] = [];
+
+            set_error_handler(fn ($code) => $code, E_WARNING);
+
+            foreach ($translations as $from => $to) {
+                // if the key is a regex, keep it as is, otherwise make a regex out of it
+                [$pattern, $replacement] = preg_match($from, '') !== false // if valid
+                    ? [$from, $to]
+                    : ['/' . preg_quote($from, '/') . '/', addcslashes($to, '$')];
+
+                $patterns[$set][$pattern] = $replacement;
+            }
+
+            restore_error_handler();
+
+            $patterns[$set]['/^[^[:alpha:]]+/'] = ''; // task name must start with a letter
+            $patterns[$set]['/[^[:alnum:]]+$/'] = ''; // task name must end with a letter or number
+        }
+
         return preg_replace(
-            ['/^[^[:alnum:]]/', '/[^[:alnum:]]$/'],
-            ['', ''],
-            strtolower(strtr(trim($string), $translations ?? $this->translations))
+            array_keys($patterns[$set]),
+            array_values($patterns[$set]),
+            strtolower(trim($string))
         );
     }
 
