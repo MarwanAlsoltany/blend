@@ -8,7 +8,7 @@ return [
     // (bool|null) Whether or not to merge the supplied executables/translations with the default ones.
     'merge' => true,
 
-    // (array[]|null) The executables to load as tasks.
+    // (array[]|null) The executables to load as tasks ('key' = executor, 'value' = an array of executables).
     'executables' => [
         'php' => [
             './bin/*',
@@ -16,6 +16,7 @@ return [
     ],
 
     // (string[]|null) The translations to apply to tasks names.
+    // Starting from v1.1.0 the key can also be a pattern (regex).
     'translations' => [
         'abc' => 'xyz',
     ],
@@ -38,7 +39,7 @@ return [
             // (string|null) If not specified a fallback will be used instead.
             'description' => 'Some task',
 
-            // (string) Valid values are 'shell', 'callback', or any available program (PHP for example).
+            // (string) Valid values are 'internal', 'shell', 'callback', or any available program executable (for example 'php' is used for PHP).
             'executor' => 'shell',
 
             // (string|callable) Depending on the executor, either a string containing a shell command, a path to an executable file, or a valid PHP callable.
