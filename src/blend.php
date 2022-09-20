@@ -75,7 +75,7 @@ $blend->addCallbackTask(
 
 if (extension_loaded('phar') && strlen($phar = \Phar::running(false))) {
     $blend->addCallbackTask(
-        'phar:update',
+        'update',
         'Updates Blend PHAR to the latest version from remote.',
         function () use ($phar) {
             $repo = 'https://github.com/MarwanAlsoltany/blend/releases/latest/download/blend.phar';
