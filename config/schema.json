@@ -12,19 +12,27 @@
     ],
     "properties": {
         "autoload": {
+            "title": "Autoload File (PHP autoloader)",
+            "description": "The autoload file to use (useful when using PHP callable as task executable).",
             "type": [
                 "string",
                 "null"
             ]
         },
         "merge": {
+            "title": "Merge Config",
+            "description": "Whether or not to merge the supplied executables/translations with the default ones.",
             "type": "boolean"
         },
         "executables": {
+            "title": "Runner Loadable Tasks",
+            "description": "The executables to load as tasks ('key' = executor, 'value' = an array of executables).",
             "type": "object",
             "required": [],
             "properties": {
                 "executor": {
+                    "title": "Executables",
+                    "description": "An array of executables.",
                     "type": "array",
                     "items": {
                         "type": "string"
@@ -33,6 +41,8 @@
             }
         },
         "translations": {
+            "title": "Runner Task Name Translations",
+            "description": "The translations to apply to tasks names.",
             "type": "object",
             "required": [],
             "properties": {
@@ -42,16 +52,24 @@
             }
         },
         "ansi": {
+            "title": "Runner Output Coloring",
+            "description": "Whether or not to turn on ANSI colors for the output.",
             "type": "boolean"
         },
         "quiet": {
+            "title": "Runner Output Suppression",
+            "description": "Whether or not to turn on the output.",
             "type": "boolean"
         },
         "tasks": {
+            "title": "Runner Configurable Tasks",
+            "description": "The tasks to add.",
             "type": "object",
             "required": [],
-            "properties": {
-                "some:task": {
+            "patternProperties": {
+                ".+": {
+                    "title": "Runner Task",
+                    "description": "Task definition ('key' = task fallback name, 'value' = task parameters).",
                     "type": "object",
                     "required": [
                         "executor",
@@ -59,18 +77,24 @@
                     ],
                     "properties": {
                         "name": {
+                            "title": "Task Name",
+                            "description": "If not specified, the key of the containing array will be used instead.",
                             "type": [
                                 "string",
                                 "null"
                             ]
                         },
                         "description": {
+                            "title": "Task Description",
+                            "description": "If not specified a fallback will be used instead.",
                             "type": [
                                 "string",
                                 "null"
                             ]
                         },
                         "executor": {
+                            "title": "Task Executor",
+                            "description": "Valid values are 'shell', 'callback', or any available program executable (for example 'php' is used for PHP).",
                             "type": "string",
                             "enum": [
                                 "shell",
@@ -78,21 +102,28 @@
                             ]
                         },
                         "executable": {
+                            "title": "Task Executable",
+                            "description": "Either a string containing a shell command or a path to an executable file",
                             "type": [
-                                "string",
-                                "object"
+                                "string"
                             ]
                         },
                         "arguments": {
+                            "title": "Task Arguments",
+                            "description": "A string containing shell command options/arguments.",
                             "type": [
                                 "string",
                                 "null"
                             ]
                         },
                         "hidden": {
+                            "title": "Task Visibility",
+                            "description": "Whether or not to hide the task from being listed.",
                             "type": "boolean"
                         },
                         "disabled": {
+                            "title": "Task Availability",
+                            "description": "Whether or not to prevent the task from being ran.",
                             "type": "boolean"
                         }
                     }
