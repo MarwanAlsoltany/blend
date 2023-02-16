@@ -1183,26 +1183,26 @@ class TaskRunner
     }
 
     /**
-     * Makes a task from array representation of a task object and adds it to the available tasks.
+     * Task Factory. Makes a task from array representation of a task object, adds it to the available tasks and returns it.
      *
      * @param array $task An associative array that represents a task object with the following keys:
      * `name`, `description`, `executor`, `executable`, `arguments`, `hidden`, `disabled`.
      * Note: the same rules of tasks supplied by config file applies to this array.
      *
-     * @return $this
+     * @return object
      *
      * @since 1.0.6
      */
-    public function makeTask(array $task)
+    public function makeTask(array $task): object
     {
         $task = (object)[
-            'name'        => $task['name']        ?? 'task-' . md5(uniqid('', true)),
-            'description' => $task['description'] ?? null,
-            'executor'    => $task['executor']    ?? '',
-            'executable'  => $task['executable']  ?? '',
-            'arguments'   => $task['arguments']   ?? null,
-            'hidden'      => $task['hidden']      ?? false,
-            'disabled'    => $task['disabled']    ?? false,
+            'name'        => $task['name']        ?? 'task-' . md5(uniqid('', true)), // string
+            'description' => $task['description'] ?? null,                            // string|null
+            'executor'    => $task['executor']    ?? '',                              // string
+            'executable'  => $task['executable']  ?? '',                              // string|callable
+            'arguments'   => $task['arguments']   ?? null,                            // string|array|null
+            'hidden'      => $task['hidden']      ?? null,                            // boolean|null
+            'disabled'    => $task['disabled']    ?? null,                            // boolean|null
         ];
 
         $func = $task->executor == static::SHELL_TASK || $task->executor == static::CALLBACK_TASK
@@ -1211,13 +1211,15 @@ class TaskRunner
 
         $args = $func === 'addTask'
             ? [$task->name, $task->description, $task->executor, $task->executable, $task->arguments]
-            : [$task->name, $task->description, $task->executable, $task->arguments];
+            : [$task->name, $task->description, /* {executor} */ $task->executable, $task->arguments];
 
-        $this
-            ->{$func}(...$args)
-            ->getTask($task->name)
-            ->setHidden($task->hidden)
-            ->setDisabled($task->disabled);
+        $this->{$func}(...$args);
+
+        $task = $this->getTask($task->name);
+        $task->setHidden($task->hidden);
+        $task->setDisabled($task->disabled);
+
+        return $task;
     }
 
     /**
