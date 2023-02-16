@@ -1151,22 +1151,25 @@ class TaskRunner
                 $class = static::class;
 
                 try {
-                    if (preg_match('/^([gs]et)([a-z0-9_]+)$/i', $method, $matches)) {
-                        $function = strtoupper($matches[1]);
-                        $property = strtolower($matches[2]);
-                        $value    = $arguments[0] ?? null;
+                    if (!preg_match('/^([gs]et)([a-z0-9_]+)$/i', $method, $matches)) {
+                        return;
+                    }
 
-                        if (!property_exists($this, $property)) {
-                            throw new \Exception("Call to undefined property {$class}::${$property}");
-                        }
+                    $function = strtoupper($matches[1]);
+                    $property = strtolower($matches[2]);
+                    $value    = $arguments[0] ?? null;
 
-                        if ($function === 'SET') {
-                            $this->{$property} = $value ?? null;
-                            return $this;
-                        }
+                    if (!property_exists($this, $property)) {
+                        throw new \Exception("Call to undefined property {$class}::\${$property}");
+                    }
 
+                    if ($function === 'GET') {
                         return $this->{$property};
                     }
+
+                    $this->{$property} = $value ?? null;
+
+                    return $this;
                 } catch (\Exception $exception) {
                     throw new \BadMethodCallException("Call to undefined method {$class}::{$method}()", 0, $exception);
                 }
