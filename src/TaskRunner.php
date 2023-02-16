@@ -1334,7 +1334,11 @@ class TaskRunner
             [date('H:i:s'), $task->name ?? 'N/A']
         );
 
-        if ($executor === static::INTERNAL_TASK || $executor === static::SHELL_TASK) {
+        if ($executor === static::INTERNAL_TASK) {
+            throw new \Exception('Internal tasks cannot be executed using ' . __METHOD__ . '()');
+        }
+
+        if ($executor === static::SHELL_TASK) {
             $executor = '';
         }
 
