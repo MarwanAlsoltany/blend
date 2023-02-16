@@ -24,6 +24,15 @@ namespace MAKS\Blend;
 class TaskRunner
 {
     /**
+     * Package repo.
+     *
+     * @var string
+     *
+     * @since 1.1.1
+     */
+    public const REPO = 'https://github.com/MarwanAlsoltany/blend';
+
+    /**
      * Package name.
      *
      * @var string
@@ -701,8 +710,8 @@ class TaskRunner
     protected function displayHelp(): void
     {
         $this->write(
-            ['', "\e[4mBased on %s %s by \e[1mMarwan Al-Soltany\e[0m", ''],
-            [static::NAME, static::VERSION]
+            ['', "\e[4mBased on \e]8;;%s/tree/%s\e\\%s %s\e]8;;\e\\ by \e[1mMarwan Al-Soltany\e[0m", ''],
+            [static::REPO, static::VERSION, static::NAME, static::VERSION]
         );
 
         $this->write(
@@ -886,7 +895,7 @@ class TaskRunner
     /**
      * Prints out a list of the passed tasks.
      *
-     * @param object[] $tasks The tasks to list
+     * @param object[] $tasks The tasks to list.
      *
      * @return void
      */
@@ -1077,7 +1086,7 @@ class TaskRunner
      * @param string $name Task name.
      * @param string|null $description [optional] Task description.
      * @param callable $callback The callback that should be executed (it will be bound to the task runner object, if it can't be bound, the first parameter passed to it will be the task runner object).
-     * @param array|null $arguments The arguments that should be passed to the callback.
+     * @param array|null $arguments [optional] The arguments that should be passed to the callback.
      *
      * @return $this
      */
@@ -1114,8 +1123,8 @@ class TaskRunner
      * @param string $name Task name.
      * @param string|null $description [optional] Task description.
      * @param string $executor Task executor.
-     * @param mixed $executable Task executable.
-     * @param mixed $arguments [optional] Task arguments.
+     * @param string|callable $executable Task executable.
+     * @param string|array|null $arguments [optional] Task arguments.
      *
      * @return $this
      *
