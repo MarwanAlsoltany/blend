@@ -4,6 +4,18 @@ All notable changes to **Blend** will be documented in this file.
 
 <br />
 
+## [[1.1.1] - 2022-09-20](https://github.com/MarwanAlsoltany/blend/compare/v1.1.0...v1.1.1)
+- Update `TaskRunner` class:
+    - Add `REPO` class constant.
+    - Update `displayHelp()` method to have a link pointing to package repository.
+    - Refactor `makeTask()` method and Change its return value form void to the created task object.
+    - Update `addTask()` method to refactor task anonymous class.
+    - Update `runTask()` method to prevent running internal tasks.
+    - Update `sort()` method to sort using task object names instead of tasks array keys.
+    - Refactor `run()` method.
+
+<br />
+
 ## [[1.1.0] - 2022-09-20](https://github.com/MarwanAlsoltany/blend/compare/v1.0.11...v1.1.0)
 - Update `TaskRunner` class:
     - Update `translate()` method to support regex translations.
