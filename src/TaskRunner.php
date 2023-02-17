@@ -46,7 +46,7 @@ class TaskRunner
      *
      * @var string
      */
-    public const VERSION = 'v1.1.0';
+    public const VERSION = 'v1.1.1';
 
     /**
      * Default executables.
