@@ -417,7 +417,6 @@ class TaskRunnerTest extends TestCase
 
     public function testRunTaskMethodThrowsAnExceptionForDisabledTasks()
     {
-
         $this->runner->addShellTask('echo', null, 'echo Test', null);
         $this->runner->disableTask('echo');
         $this->runner->hideTask('echo');
@@ -426,6 +425,14 @@ class TaskRunnerTest extends TestCase
         $this->expectExceptionMessageMatches('/(The task with the name \'echo\' is disabled)/');
 
         $this->runner->runTask('echo');
+    }
+
+    public function testRunTaskMethodThrowsAnExceptionForInternalTasks()
+    {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessageMatches('/(Internal tasks cannot be executed using ([a-zA-Z\\\\]+)::runTask())/');
+
+        $this->runner->runTask('help');
     }
 
     public function testRunMethod()
