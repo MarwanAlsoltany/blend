@@ -1396,28 +1396,26 @@ class TaskRunner
             [$this->getName(), $this->getVersion()]
         );
 
-        $chainable = $task !== null;
-        $task      = $this->task = (string)($task ?? $this->task);
-        $available = $this->getTask($task);
+        $chainable = !empty($task);
+        $name      = $this->task = (string)($task ?? $this->task);
+        $task      = $this->getTask($name);
         $code      = static::SUCCESS;
 
         switch (true) {
-            case ($task === 'help' || $task === ''):
+            case ($name === 'help' || empty($name)):
                 $this->displayHelp();
                 break;
-            case ($task === 'list'):
+            case ($name === 'list'):
                 $this->displayList();
                 break;
-            case ($task === 'exec'):
+            case ($name === 'exec'):
                 $this->displayExec();
                 break;
-            case ($available === null || ($available && $available->disabled)):
+            case ($task === null || ($task && $task->disabled)):
                 $this->displayHint();
                 break;
-        }
-
-        if ($available) {
-            $code = $this->runTask($task);
+            default:
+                $code = $this->runTask($name);
         }
 
         return $chainable ? $this : $this->terminate($code);
