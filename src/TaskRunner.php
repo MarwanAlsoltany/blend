@@ -1449,7 +1449,7 @@ class TaskRunner
      */
     public function sort()
     {
-        ksort($this->tasks, SORT_STRING);
+        usort($this->tasks, fn ($a, $b) => strcmp($a->name, $b->name));
 
         return $this;
     }
