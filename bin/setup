@@ -164,7 +164,7 @@ function write($text, ?string $style = null, int $newLine = 1) {
 
     $format = "%s\n";
 
-    $style = strtoupper($style);
+    $style = strtoupper(strval($style));
 
     if (isset($ansi[$style])) {
         $format = $ansi[$style];
